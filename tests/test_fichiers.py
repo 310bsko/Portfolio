@@ -86,3 +86,24 @@ def test_le_cv_se_telecharge_depuis_l_accueil(client):
 def test_identifiants_cloudinary():
     assert _identifiant("projets/abc.jpg") == "projets/abc"
     assert _identifiant("cv/abc.pdf") == "cv/abc.pdf"
+
+
+def test_cloudinary_recoit_le_contenu_d_une_image_nettoyee(monkeypatch):
+    """Régression : un ContentFile sans nom était ignoré par le SDK (erreur 500 en ligne)."""
+    import cloudinary.uploader
+    import cloudinary.utils
+    from django.core.files.base import ContentFile
+
+    from apps.core.stockage import StockageCloudinary
+
+    envoye = {}
+
+    def faux_call_api(action, params, http_headers=None, return_error=False, unsigned=False,
+                      file=None, timeout=None, **options):
+        envoye["fichier"] = cloudinary.utils.handle_file_parameter(file, options.get("filename"))
+        return {}
+
+    monkeypatch.setattr(cloudinary.uploader, "call_api", faux_call_api)
+    nom = StockageCloudinary().save("profil/abc.jpg", ContentFile(b"octets-image"))
+    assert nom == "profil/abc.jpg"
+    assert envoye["fichier"] == ("abc.jpg", b"octets-image")

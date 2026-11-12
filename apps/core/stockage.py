@@ -36,8 +36,12 @@ class StockageCloudinary(Storage):
     def _save(self, name, content):
         name = name.replace("\\", "/")
         content.seek(0)
+        # On envoie les octets, pas l'objet fichier : le SDK teste `if file:` et un
+        # ContentFile sans nom (image nettoyée par ChampImage) vaut False, ce qui
+        # provoquait « Missing required parameter - file » (erreur 500).
         cloudinary.uploader.upload(
-            content,
+            content.read(),
+            filename=PurePosixPath(name).name,
             public_id=_identifiant(name),
             resource_type="image" if _est_image(name) else "raw",
             overwrite=True,
