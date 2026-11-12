@@ -94,7 +94,9 @@ class Profil(LigneUnique):
         help_text="Affiché dans l'en-tête si aucune image de logo n'est fournie. "
         "Vide = prénom et nom.",
     )
-    logo_image = ChampImage("logo (image)", upload_to=Chemin("logo"), blank=True)
+    logo_image = ChampImage(
+        "logo (image)", upload_to=Chemin("logo"), blank=True, rogner=True
+    )
     logo_alt = models.CharField("texte alternatif du logo", max_length=160, blank=True)
     apropos_photo = ChampImage(
         "photo de l'À propos", upload_to=Chemin("profil"), blank=True,

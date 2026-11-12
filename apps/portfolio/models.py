@@ -59,7 +59,7 @@ class Competence(Ordonne):
         help_text="Sans catégorie, la compétence apparaît dans le groupe « Autres ».",
     )
     niveau = models.CharField("niveau", max_length=10, choices=Niveau.choices, blank=True)
-    icone = ChampImage("icône", upload_to=Chemin("competences"), blank=True)
+    icone = ChampImage("icône", upload_to=Chemin("competences"), blank=True, rogner=True)
     mise_en_avant = models.BooleanField(
         "compétence clé", default=False, help_text="Affichée sur la page d'accueil."
     )
@@ -184,7 +184,7 @@ class Parcours(Ordonne):
     )
     description = models.TextField("description", blank=True, help_text="Markdown.")
     lien = models.URLField("lien de vérification", blank=True)
-    logo = ChampImage("logo", upload_to=Chemin("parcours"), blank=True)
+    logo = ChampImage("logo", upload_to=Chemin("parcours"), blank=True, rogner=True)
     visible = models.BooleanField("visible", default=True)
 
     objects = ParcoursQuerySet.as_manager()

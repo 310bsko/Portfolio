@@ -337,10 +337,9 @@ a:hover { color: var(--accent-survol); }
 /* Pastille d'icône : fond blanc et cadre pour que les logos clairs restent lisibles. */
 .competence__icone {
   /* Pastille plus large que haute : les logos horizontaux (Spark, Hadoop…) gardent une taille lisible. */
-  display: grid; place-items: center; flex: none; width: 88px; height: 60px; padding: 10px;
+  display: flex; align-items: center; justify-content: center; flex: none; width: 88px; height: 60px; padding: 10px;
   background: #fff; border: 1px solid var(--bordure); border-radius: 14px;
 }
-.competence__icone img { width: 100%; height: 100%; object-fit: contain; }
 .competence__icone--initiale { font-family: var(--titres); font-size: 1.4rem; font-weight: 650; color: var(--accent); background: #EFF6FF; border-color: #BFDBFE; }
 .competence__corps { display: grid; justify-items: start; gap: .35rem; min-width: 0; }
 .competence__nom { font-size: 1.05rem; font-weight: 600; line-height: 1.3; }
@@ -358,10 +357,18 @@ a:hover { color: var(--accent-survol); }
   border-radius: 50%; background: var(--fond); border: 2px solid var(--accent);
 }
 .frise__meta { display: flex; flex-wrap: wrap; align-items: center; gap: .4rem .75rem; font-size: .88rem; color: var(--secondaire); }
-.frise__tete { display: flex; align-items: flex-start; gap: .85rem; }
-.frise__tete img { width: 44px; height: 44px; object-fit: contain; border-radius: 8px; border: 1px solid var(--bordure); background: #fff; flex: none; }
+.frise__tete { display: flex; align-items: center; gap: 1rem; }
+/* Même pastille que les compétences : les logos d'école, souvent larges, restent lisibles. */
+.frise__logo {
+  display: flex; align-items: center; justify-content: center; flex: none; width: 112px; height: 64px; padding: 6px;
+  background: #fff; border: 1px solid var(--bordure); border-radius: 14px;
+}
+.frise__logo img, .competence__icone img { width: 100%; height: 100%; min-height: 0; object-fit: contain; }
 .frise__tete h3 { font-size: 1.2rem; }
-.parcours__titre { margin-bottom: 1.5rem; font-size: 1.5rem; }
+@media (max-width: 479px) {
+  .frise__tete { align-items: flex-start; }
+  .frise__logo { width: 72px; height: 54px; padding: 8px; }
+}
 .frise__lieu { color: var(--secondaire); }
 
 /* ---------- Collaborations ---------- */

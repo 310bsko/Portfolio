@@ -15,7 +15,7 @@ from django.core.exceptions import ValidationError
 from django.core.files.base import ContentFile
 from django.db import models
 from django.utils.deconstruct import deconstructible
-from PIL import Image, ImageOps
+from PIL import Image, ImageChops, ImageOps
 
 FORMATS_IMAGE = {"JPEG": ".jpg", "PNG": ".png", "WEBP": ".webp"}
 
@@ -71,12 +71,41 @@ def valider_pdf(fichier):
         raise ValidationError("Ce fichier n'est pas un vrai PDF.")
 
 
-def nettoyer_image(fichier):
-    """Réenregistre l'image sans métadonnées (EXIF, GPS…), orientation appliquée."""
+def rogner_marges(image, seuil=24, respiration=0.04):
+    """Retire les marges blanches ou transparentes autour d'un logo.
+
+    Beaucoup de logos sont fournis dans un carré avec de grandes marges : une fois
+    affichés dans une petite pastille, ils deviennent minuscules. On garde une légère
+    marge (4 % de la plus grande dimension) pour que le logo ne touche pas le bord.
+    """
+    rgba = image.convert("RGBA")
+    opaque = rgba.getchannel("A").point(lambda a: 255 if a > 8 else 0)
+    blanc = Image.new("RGB", rgba.size, (255, 255, 255))
+    colore = ImageChops.difference(rgba.convert("RGB"), blanc).convert("L")
+    colore = colore.point(lambda v: 255 if v > seuil else 0)
+    boite = ImageChops.multiply(opaque, colore).getbbox()
+    if not boite:
+        return image
+    largeur, hauteur = image.size
+    marge = round(max(boite[2] - boite[0], boite[3] - boite[1]) * respiration)
+    boite = (
+        max(0, boite[0] - marge), max(0, boite[1] - marge),
+        min(largeur, boite[2] + marge), min(hauteur, boite[3] + marge),
+    )
+    return image.crop(boite)
+
+
+def nettoyer_image(fichier, rogner=False):
+    """Réenregistre l'image sans métadonnées (EXIF, GPS…), orientation appliquée.
+
+    Avec `rogner=True` (logos, icônes), les marges vides autour de l'image sont retirées.
+    """
     fichier.seek(0)
     with Image.open(fichier) as image:
         format_reel = image.format
         image = ImageOps.exif_transpose(image)
+        if rogner:
+            image = rogner_marges(image)
         if format_reel == "JPEG" and image.mode not in ("RGB", "L"):
             image = image.convert("RGB")
         elif image.mode == "P":
@@ -103,14 +132,27 @@ class Chemin:
 
 
 class ChampImage(models.ImageField):
-    """Image validée, nettoyée de ses métadonnées avant d'être stockée."""
+    """Image validée, nettoyée de ses métadonnées avant d'être stockée.
+
+    `rogner=True` retire les marges vides : à réserver aux logos et icônes (jamais aux photos).
+    """
 
     default_validators = [valider_image]
+
+    def __init__(self, *args, rogner=False, **kwargs):
+        self.rogner = rogner
+        super().__init__(*args, **kwargs)
+
+    def deconstruct(self):
+        nom, chemin, args, kwargs = super().deconstruct()
+        if self.rogner:
+            kwargs["rogner"] = True
+        return nom, chemin, args, kwargs
 
     def pre_save(self, instance, add):
         fichier = getattr(instance, self.attname)
         if fichier and not fichier._committed:
-            contenu, extension = nettoyer_image(fichier.file)
+            contenu, extension = nettoyer_image(fichier.file, rogner=self.rogner)
             fichier.name = str(PurePosixPath(fichier.name).with_suffix(extension))
             fichier.file = ContentFile(contenu)
         return super().pre_save(instance, add)

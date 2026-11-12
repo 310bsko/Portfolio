@@ -6,7 +6,7 @@
 {% for nom, lignes in groupes %}
 <section class="bloc bloc--serre">
   <div class="conteneur conteneur--etroit">
-    <h2 class="parcours__titre reveler">{{ nom }}</h2>
+    <h2 class="groupe__titre reveler"><span>{{ nom }}</span><span class="groupe__compte">{{ lignes|length }}</span></h2>
     <ol class="frise">
       {% for ligne in lignes %}
       <li class="frise__ligne reveler">
@@ -16,7 +16,7 @@
           {% elif ligne.date_fin %}<span>{{ ligne.date_fin|date:"M Y" }}</span>{% endif %}
         </p>
         <div class="frise__tete">
-          {% if ligne.logo %}<img src="{{ ligne.logo|image:96 }}" alt="" width="44" height="44" loading="lazy">{% endif %}
+          {% if ligne.logo %}<span class="frise__logo" aria-hidden="true"><img src="{{ ligne.logo|image:240 }}" alt="" width="68" height="44" loading="lazy"></span>{% endif %}
           <div>
             <h3>{{ ligne.titre }}</h3>
             {% if ligne.organisme or ligne.lieu %}<p class="frise__lieu">{{ ligne.organisme }}{% if ligne.organisme and ligne.lieu %} · {% endif %}{{ ligne.lieu }}</p>{% endif %}

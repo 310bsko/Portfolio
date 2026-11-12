@@ -155,3 +155,40 @@ def test_apropos_sans_photo_dediee(client):
     profil.refresh_from_db()
     apropos = client.get(reverse("apropos")).content.decode()
     assert profil.photo.name not in apropos and "apropos--sans-photo" in apropos
+
+
+def _logo_avec_marges(mode, fond, format="PNG"):
+    import io as _io
+
+    from django.core.files.uploadedfile import SimpleUploadedFile as Envoi
+    from PIL import ImageDraw
+
+    image = Image.new(mode, (500, 500), fond)
+    ImageDraw.Draw(image).rectangle((100, 200, 399, 279), fill="#1E88C7")
+    tampon = _io.BytesIO()
+    image.save(tampon, format=format)
+    return Envoi(f"logo.{format.lower()}", tampon.getvalue())
+
+
+@pytest.mark.parametrize(
+    "mode, fond, format",
+    [("RGB", "white", "JPEG"), ("RGBA", (0, 0, 0, 0), "PNG")],
+)
+def test_logo_du_parcours_rogne_de_ses_marges(mode, fond, format):
+    from apps.portfolio.models import Parcours
+
+    ligne = Parcours.objects.create(
+        titre="Master", type="formation", logo=_logo_avec_marges(mode, fond, format)
+    )
+    with Image.open(ligne.logo.path) as logo:
+        largeur, hauteur = logo.size
+    # Logo de 300 × 80 + 4 % de respiration de chaque côté (12 px).
+    assert 300 <= largeur <= 330 and 80 <= hauteur <= 110
+
+
+def test_photo_jamais_rognee():
+    profil = Profil.objects.get()
+    profil.photo = _logo_avec_marges("RGB", "white", "JPEG")
+    profil.save()
+    with Image.open(profil.photo.path) as photo:
+        assert photo.size == (500, 500)
