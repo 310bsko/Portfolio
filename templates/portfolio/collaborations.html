@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+{% load contenu %}
+
+{% block contenu %}
+{% include "_entete_page.html" with titre=section.titre sous_titre=section.sous_titre %}
+<section class="bloc bloc--serre">
+  <div class="conteneur">
+    {% if collaborations %}
+    <ul class="grille-collaborations">
+      {% for collaboration in collaborations %}
+      <li class="collaboration reveler" style="--i:{{ forloop.counter0 }}">
+        {% if collaboration.logo %}<img class="collaboration__logo" src="{{ collaboration.logo|image:128 }}" alt="" width="56" height="56" loading="lazy">{% endif %}
+        <div>
+          <h2 translate="no">{{ collaboration.nom }}</h2>
+          {% if collaboration.role or collaboration.organisation %}<p class="collaboration__role">{{ collaboration.role }}{% if collaboration.role and collaboration.organisation %} · {% endif %}{{ collaboration.organisation }}</p>{% endif %}
+          {% with lies=collaboration.projets.all %}{% if lies and sections.projets %}
+          <p class="competence__projets">{% for projet in lies %}<a href="{{ projet.get_absolute_url }}">{{ projet.titre }}</a>{% if not forloop.last %}, {% endif %}{% endfor %}</p>
+          {% endif %}{% endwith %}
+          {% if collaboration.lien %}<a class="lien-fleche" href="{{ collaboration.lien }}" target="_blank" rel="noopener">Voir le profil</a>{% endif %}
+        </div>
+      </li>
+      {% endfor %}
+    </ul>
+    {% else %}
+    <p class="vide">Aucune collaboration à afficher pour le moment.</p>
+    {% endif %}
+  </div>
+</section>
+{% endblock %}

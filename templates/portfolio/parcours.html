@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+{% load contenu %}
+
+{% block contenu %}
+{% include "_entete_page.html" with titre=section.titre sous_titre=section.sous_titre %}
+{% for nom, lignes in groupes %}
+<section class="bloc bloc--serre">
+  <div class="conteneur conteneur--etroit">
+    <h2 class="parcours__titre reveler">{{ nom }}</h2>
+    <ol class="frise">
+      {% for ligne in lignes %}
+      <li class="frise__ligne reveler">
+        <p class="frise__meta">
+          <span class="niveau">{{ ligne.get_type_display }}</span>
+          {% if ligne.date_debut %}<span>{{ ligne.date_debut|date:"M Y" }} – {% if ligne.date_fin %}{{ ligne.date_fin|date:"M Y" }}{% else %}aujourd'hui{% endif %}</span>
+          {% elif ligne.date_fin %}<span>{{ ligne.date_fin|date:"M Y" }}</span>{% endif %}
+        </p>
+        <div class="frise__tete">
+          {% if ligne.logo %}<img src="{{ ligne.logo|image:96 }}" alt="" width="44" height="44" loading="lazy">{% endif %}
+          <div>
+            <h3>{{ ligne.titre }}</h3>
+            {% if ligne.organisme or ligne.lieu %}<p class="frise__lieu">{{ ligne.organisme }}{% if ligne.organisme and ligne.lieu %} · {% endif %}{{ ligne.lieu }}</p>{% endif %}
+          </div>
+        </div>
+        {% if ligne.description %}<div class="prose">{{ ligne.description|markdown }}</div>{% endif %}
+        {% if ligne.lien %}<a class="lien-fleche" href="{{ ligne.lien }}" target="_blank" rel="noopener">{% if ligne.type == "certification" %}Vérifier la certification{% else %}En savoir plus{% endif %}</a>{% endif %}
+      </li>
+      {% endfor %}
+    </ol>
+  </div>
+</section>
+{% empty %}
+<section class="bloc bloc--serre">
+  <div class="conteneur conteneur--etroit">
+    <p class="vide">Le parcours sera bientôt renseigné.</p>
+  </div>
+</section>
+{% endfor %}
+{% endblock %}

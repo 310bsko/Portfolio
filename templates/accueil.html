@@ -1,0 +1,83 @@
+{% extends "base.html" %}
+{% load static contenu %}
+
+{% block titre %}{% if section.seo_titre %}{{ section.seo_titre }}{% else %}{{ nom_site }}{% if profil.titre %} · {{ profil.titre }}{% endif %}{% endif %}{% endblock %}
+{% block og_titre %}{% firstof section.seo_titre nom_site %}{% endblock %}
+
+{% block contenu %}
+<section class="hero">
+  <span class="hero__halo hero__halo--a" aria-hidden="true"></span>
+  <span class="hero__halo hero__halo--b" aria-hidden="true"></span>
+  <div class="conteneur hero__grille">
+    <div class="hero__texte entree">
+      {% if profil.disponible and profil.disponibilite_texte %}
+      <p class="dispo"><span class="dispo__point" aria-hidden="true"></span>{{ profil.disponibilite_texte }}</p>
+      {% endif %}
+      <h1 translate="no" aria-label="{{ profil.nom_complet }}">{% for mot in profil.nom_complet.split %}<span class="mot" aria-hidden="true"><span style="--i:{{ forloop.counter0 }}">{{ mot }}</span></span>{% if not forloop.last %} {% endif %}{% endfor %}</h1>
+      {% if profil.titre %}<p class="hero__titre">{{ profil.titre }}</p>{% endif %}
+      {% if profil.accroche %}<p class="hero__accroche">{{ profil.accroche|linebreaksbr }}</p>{% endif %}
+      <div class="actions">
+        {% if sections.projets and parametres.bouton_projets %}<a class="bouton bouton--plein" data-aimant href="{% url 'projets' %}">{{ parametres.bouton_projets }}</a>{% endif %}
+        {% if sections.contact and parametres.bouton_contact %}<a class="bouton" href="{% url 'contact' %}">{{ parametres.bouton_contact }}</a>{% endif %}
+        {% if profil.cv and parametres.bouton_cv %}<a class="bouton bouton--discret" href="{{ profil.cv.url }}" download>
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 4v11m0 0-4-4m4 4 4-4M5 20h14"/></svg>{{ parametres.bouton_cv }}</a>{% endif %}
+      </div>
+      {% if profil.localisation %}<p class="hero__lieu">{{ profil.localisation }}</p>{% endif %}
+      {% include "_reseaux.html" %}
+    </div>
+    {% if profil.photo %}
+    <div class="hero__photo">
+      <div class="hero__cadre" data-incliner="7">
+        <span class="hero__anneau" aria-hidden="true"></span>
+        <span class="hero__pastille" aria-hidden="true"></span>
+        <img src="{{ profil.photo|image:720 }}" alt="{% firstof profil.photo_alt profil.nom_complet %}" width="360" height="360" fetchpriority="high">
+      </div>
+    </div>
+    {% endif %}
+  </div>
+</section>
+
+{% if projets_vedette %}
+<section class="bloc">
+  <div class="conteneur">
+    <div class="bloc__tete reveler">
+      <h2>{% firstof sections.projets.titre "Projets" %}</h2>
+      <a class="lien-fleche" href="{% url 'projets' %}">Tous les projets</a>
+    </div>
+    <div class="grille-projets grille-projets--vedette">
+      {% for projet in projets_vedette %}{% include "portfolio/_carte.html" with h="h3" %}{% endfor %}
+    </div>
+  </div>
+</section>
+{% endif %}
+
+{% if competences_cles %}
+<section class="bloc bloc--attenue">
+  <div class="conteneur">
+    <div class="bloc__tete reveler">
+      <h2>{% firstof sections.competences.titre "Compétences" %}</h2>
+      <a class="lien-fleche" href="{% url 'competences' %}">Toutes les compétences</a>
+    </div>
+    <ul class="badges badges--grands reveler" translate="no">
+      {% for competence in competences_cles %}<li style="--j:{{ forloop.counter0 }}">{% if competence.icone %}<img src="{{ competence.icone|image:48 }}" alt="" width="20" height="20" loading="lazy">{% endif %}{{ competence.nom }}</li>
+      {% endfor %}
+    </ul>
+  </div>
+</section>
+{% endif %}
+
+{% if sections.contact %}
+<section class="bloc">
+  <div class="conteneur">
+    <div class="appel reveler">
+      <span class="appel__halo" aria-hidden="true"></span>
+      <div>
+        <h2>{{ sections.contact.titre }}</h2>
+        {% if sections.contact.sous_titre %}<p>{{ sections.contact.sous_titre }}</p>{% endif %}
+      </div>
+      <a class="bouton bouton--plein" data-aimant href="{% url 'contact' %}">{% firstof parametres.bouton_contact "Me contacter" %}</a>
+    </div>
+  </div>
+</section>
+{% endif %}
+{% endblock %}

@@ -1,0 +1,29 @@
+name: CI
+
+# Lint, tests et contrôle de sécurité. Le déploiement est fait par Vercel (décision D8) :
+# on travaille sur une branche, fusionnée dans main seulement si cette CI est verte.
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  verifier:
+    runs-on: ubuntu-latest
+    env:
+      SECRET_KEY: cle-de-test-uniquement-pour-la-ci-0123456789-abcdefghijklmnopqrstuvwxyz
+      DEBUG: "False"
+    steps:
+      - uses: actions/checkout@v4
+      - uses: astral-sh/setup-uv@v5
+        with:
+          enable-cache: true
+      - run: uv sync --frozen
+      - run: uv run ruff check .
+      - run: uv run python manage.py makemigrations --check --dry-run
+      - run: uv run pytest -q
+      - run: uv run python manage.py check --deploy --fail-level WARNING
+      - name: Analyse des dépendances (informative)
+        run: uvx pip-audit
+        continue-on-error: true

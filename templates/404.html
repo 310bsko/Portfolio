@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+
+{% block titre %}Page introuvable · {{ nom_site }}{% endblock %}
+{% block og_titre %}Page introuvable{% endblock %}
+
+{% block contenu %}
+<section class="erreur">
+  <div class="conteneur entree">
+    <p class="erreur__code" aria-hidden="true">404</p>
+    <h1>Page introuvable</h1>
+    <p>Cette page n'existe pas, ou elle n'est plus disponible.</p>
+    <div class="actions"><a class="bouton bouton--plein" href="{% url 'accueil' %}">Retour à l'accueil</a></div>
+  </div>
+</section>
+{% endblock %}

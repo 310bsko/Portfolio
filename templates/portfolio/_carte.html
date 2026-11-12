@@ -1,0 +1,19 @@
+{% load static contenu %}
+<article class="carte reveler" data-incliner="3" style="--i:{{ forloop.counter0 }}">
+  <div class="carte__image" style="view-transition-name:projet-{{ projet.pk }}">
+    {% if projet.image %}<img src="{{ projet.image|image:900 }}" alt="{{ projet.alt }}" loading="lazy">
+    {% else %}<img src="{% static 'img/projet-defaut.svg' %}" alt="" loading="lazy">{% endif %}
+  </div>
+  <div class="carte__corps">
+    {% if projet.categorie.visible or projet.annee %}
+    <p class="carte__meta">{% if projet.categorie.visible %}<span>{{ projet.categorie.nom }}</span>{% endif %}{% if projet.annee %}<span>{{ projet.annee }}</span>{% endif %}</p>
+    {% endif %}
+    <{{ h|default:"h2" }} class="carte__titre" style="view-transition-name:titre-{{ projet.pk }}"><a class="carte__lien" href="{{ projet.get_absolute_url }}">{{ projet.titre }}</a></{{ h|default:"h2" }}>
+    {% if projet.resume %}<p class="carte__resume">{{ projet.resume }}</p>{% endif %}
+    {% with technologies=projet.technologies.all %}{% if technologies %}
+    <ul class="badges" translate="no">
+      {% for technologie in technologies|slice:":5" %}<li>{{ technologie.nom }}</li>{% endfor %}
+    </ul>
+    {% endif %}{% endwith %}
+  </div>
+</article>

@@ -1,0 +1,8 @@
+{% if profil.lien_github or profil.lien_linkedin or profil.lien_whatsapp or profil.lien_autre %}
+<ul class="{{ classe|default:'reseaux' }}" translate="no">
+  {% if profil.lien_github %}<li><a href="{{ profil.lien_github }}" rel="me noopener" target="_blank">GitHub</a></li>{% endif %}
+  {% if profil.lien_linkedin %}<li><a href="{{ profil.lien_linkedin }}" rel="me noopener" target="_blank">LinkedIn</a></li>{% endif %}
+  {% if profil.lien_whatsapp %}<li><a href="{{ profil.lien_whatsapp }}" rel="noopener" target="_blank">WhatsApp</a></li>{% endif %}
+  {% if profil.lien_autre %}<li><a href="{{ profil.lien_autre }}" rel="noopener" target="_blank">{% firstof profil.lien_autre_libelle "Autre lien" %}</a></li>{% endif %}
+</ul>
+{% endif %}

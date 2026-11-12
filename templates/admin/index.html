@@ -1,0 +1,100 @@
+{% extends "admin/base_site.html" %}
+{% load i18n static log %}
+
+{% block bodyclass %}{{ block.super }} dashboard tableau{% endblock %}
+{% block nav-breadcrumbs %}{% endblock %}
+{% block nav-sidebar %}{% endblock %}
+{% block content_title %}{% endblock %}
+
+{% block content %}
+<section class="tb-accueil">
+  <div>
+    <p class="tb-sur">Tableau de bord</p>
+    <h1>Bonjour {% firstof user.get_short_name user.get_username %}</h1>
+    <p class="tb-texte">Tout le contenu du site se gère ici. Une modification est visible en moins de 60 secondes.</p>
+  </div>
+  <div class="tb-actions">
+    <a class="tb-bouton tb-bouton--plein" href="{% url 'admin:portfolio_projet_add' %}">+ Ajouter un projet</a>
+    <a class="tb-bouton" href="{{ url_profil }}">Modifier mon profil</a>
+    <a class="tb-bouton" href="{% url 'accueil' %}" target="_blank" rel="noopener">Voir le site ↗</a>
+  </div>
+</section>
+
+<section class="tb-chiffres" aria-label="Chiffres clés">
+  {% for libelle, valeur, detail, url in chiffres %}
+  <a class="tb-chiffre" href="{{ url }}" style="--i:{{ forloop.counter0 }}">
+    <span class="tb-chiffre__valeur">{{ valeur }}</span>
+    <span class="tb-chiffre__libelle">{{ libelle }}</span>
+    <span class="tb-chiffre__detail">{{ detail }}</span>
+  </a>
+  {% endfor %}
+</section>
+
+<div class="tb-colonnes">
+  <div id="content-main">
+    {% include "admin/app_list.html" with app_list=app_list show_changelinks=True %}
+  </div>
+
+  <aside class="tb-cote">
+    <section class="tb-carte">
+      <h2>Site complété à {{ avancement }} %</h2>
+      <div class="tb-jauge" role="img" aria-label="{{ avancement }} % complété"><span style="transform:scaleX(calc({{ avancement }} / 100))"></span></div>
+      {% if a_faire %}
+      <ul class="tb-liste">
+        {% for texte, url in a_faire %}<li><a href="{{ url }}">{{ texte }}</a></li>{% endfor %}
+      </ul>
+      {% else %}
+      <p class="tb-vide">Tout est renseigné. Beau travail !</p>
+      {% endif %}
+    </section>
+
+    <section class="tb-carte">
+      <h2>Derniers messages</h2>
+      {% if derniers_messages %}
+      <ul class="tb-messages">
+        {% for message in derniers_messages %}
+        <li{% if not message.lu %} class="non-lu"{% endif %}>
+          <a href="{% url 'admin:contact_message_change' message.pk %}">
+            <strong>{{ message.nom }}</strong>
+            <span>{% firstof message.sujet "Sans sujet" %}</span>
+            <time datetime="{{ message.date|date:'c' }}">{{ message.date|date:"j M" }}</time>
+          </a>
+        </li>
+        {% endfor %}
+      </ul>
+      {% else %}
+      <p class="tb-vide">Aucun message pour le moment.</p>
+      {% endif %}
+    </section>
+
+    <section class="tb-carte">
+      <h2>Raccourcis</h2>
+      <ul class="tb-liste tb-liste--simple">
+        <li><a href="{{ url_parametres }}">Paramètres du site</a></li>
+        <li><a href="{% url 'admin:core_sectionpublique_changelist' %}">Sections et menu</a></li>
+        <li><a href="{% url 'admin:core_pagestatique_changelist' %}">Pages légales</a></li>
+        <li><a href="{% url 'admin:exporter' %}">Exporter les données (sauvegarde)</a></li>
+      </ul>
+    </section>
+
+    <section class="tb-carte">
+      <h2>Mes dernières actions</h2>
+      {% get_admin_log 6 as admin_log for_user user %}
+      {% if not admin_log %}
+      <p class="tb-vide">Aucune action pour le moment.</p>
+      {% else %}
+      <ul class="tb-journal">
+        {% for entry in admin_log %}
+        <li class="{% if entry.is_addition %}ajout{% elif entry.is_change %}modif{% else %}suppr{% endif %}">
+          {% if entry.is_deletion or not entry.get_admin_url %}{{ entry.object_repr }}{% else %}<a href="{{ entry.get_admin_url }}">{{ entry.object_repr }}</a>{% endif %}
+          {% if entry.content_type %}<span>{{ entry.content_type.name|capfirst }}</span>{% endif %}
+        </li>
+        {% endfor %}
+      </ul>
+      {% endif %}
+    </section>
+  </aside>
+</div>
+{% endblock %}
+
+{% block sidebar %}{% endblock %}

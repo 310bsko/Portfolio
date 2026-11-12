@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+
+{% block contenu %}
+{% include "_entete_page.html" with titre=section.titre sous_titre=section.sous_titre %}
+<section class="bloc bloc--serre">
+  <div class="conteneur">
+    {% if categories %}
+    <nav class="filtres reveler" aria-label="Filtrer par catégorie">
+      <a href="{% url 'projets' %}"{% if not active %} aria-current="true"{% endif %}>Tous</a>
+      {% for categorie in categories %}<a href="{% url 'projets' %}?categorie={{ categorie.slug }}"{% if categorie == active %} aria-current="true"{% endif %}>{{ categorie.nom }}</a>
+      {% endfor %}
+    </nav>
+    {% endif %}
+    {% if projets %}
+    <div class="grille-projets">
+      {% for projet in projets %}{% include "portfolio/_carte.html" with h="h2" %}{% endfor %}
+    </div>
+    {% else %}
+    <p class="vide">Aucun projet à afficher pour le moment.</p>
+    {% endif %}
+  </div>
+</section>
+{% endblock %}

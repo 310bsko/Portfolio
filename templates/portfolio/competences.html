@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+{% load contenu %}
+
+{% block contenu %}
+{% include "_entete_page.html" with titre=section.titre sous_titre=section.sous_titre %}
+<section class="bloc bloc--serre">
+  <div class="conteneur groupes">
+    {% for nom, competences in groupes %}
+    <section class="groupe reveler">
+      {% if nom %}<h2>{{ nom }}</h2>{% endif %}
+      <ul class="competences">
+        {% for competence in competences %}
+        <li class="competence">
+          <p class="competence__nom">
+            {% if competence.icone %}<img src="{{ competence.icone|image:48 }}" alt="" width="22" height="22" loading="lazy">{% endif %}
+            <span translate="no">{{ competence.nom }}</span>
+            {% if competence.niveau %}<span class="niveau niveau--{{ competence.niveau }}">{{ competence.get_niveau_display }}</span>{% endif %}
+          </p>
+          {% with lies=competence.projets.all %}{% if lies and sections.projets %}
+          <p class="competence__projets">{% for projet in lies %}<a href="{{ projet.get_absolute_url }}">{{ projet.titre }}</a>{% if not forloop.last %}, {% endif %}{% endfor %}</p>
+          {% endif %}{% endwith %}
+        </li>
+        {% endfor %}
+      </ul>
+    </section>
+    {% empty %}
+    <p class="vide">Aucune compétence à afficher pour le moment.</p>
+    {% endfor %}
+  </div>
+</section>
+{% endblock %}

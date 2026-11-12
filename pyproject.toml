@@ -1,0 +1,46 @@
+[project]
+name = "portfolio"
+version = "0.1.0"
+description = "Portfolio d'étudiant, entièrement administrable sans toucher au code (Django)"
+requires-python = ">=3.12"
+dependencies = [
+    "Django>=5.2,<5.3",
+    "django-environ>=0.11",
+    "django-axes>=7.0",
+    "django-ratelimit>=4.1",
+    "psycopg[binary]>=3.2",
+    "whitenoise>=6.7",
+    "cloudinary>=1.41",
+    "Pillow>=10.4",
+    "Markdown>=3.6",
+    "nh3>=0.2.18",
+]
+
+[dependency-groups]
+dev = [
+    "pytest>=8",
+    "pytest-django>=4.9",
+    "ruff>=0.6",
+]
+
+# Vercel lance cette commande après l'installation des dépendances (décision D8).
+# collectstatic est exécuté automatiquement par Vercel : inutile de l'ajouter.
+[tool.vercel.scripts]
+build = "python manage.py migrate --noinput && python manage.py createcachetable"
+
+[tool.pytest.ini_options]
+DJANGO_SETTINGS_MODULE = "config.settings"
+pythonpath = ["."]
+testpaths = ["tests"]
+filterwarnings = [
+    "ignore:No directory at:UserWarning",
+    "ignore:The default scheme will be changed",
+]
+
+[tool.ruff]
+line-length = 100
+target-version = "py312"
+extend-exclude = ["migrations"]
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "B", "UP", "DJ"]

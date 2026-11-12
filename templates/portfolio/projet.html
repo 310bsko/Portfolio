@@ -1,0 +1,83 @@
+{% extends "base.html" %}
+{% load static contenu %}
+
+{% block titre %}{{ projet.titre }} · {{ nom_site }}{% endblock %}
+{% block og_titre %}{{ projet.titre }}{% endblock %}
+{% block meta_description %}{% firstof projet.resume parametres.description as description %}{% if description %}
+  <meta name="description" content="{{ description }}">
+  <meta property="og:description" content="{{ description }}">{% endif %}{% endblock %}
+{% block og_image %}{% if projet.image %}<meta property="og:image" content="{{ projet.image|image:1200 }}">{% else %}{{ block.super }}{% endif %}{% endblock %}
+
+{% block progression %}<div class="progression" aria-hidden="true"></div>{% endblock %}
+
+{% block contenu %}
+<article class="projet">
+  <header class="page-entete">
+    <div class="conteneur conteneur--etroit entree">
+      <a class="lien-retour" href="{% url 'projets' %}">{% firstof sections.projets.titre "Projets" %}</a>
+      <h1 style="view-transition-name:titre-{{ projet.pk }}">{{ projet.titre }}</h1>
+      {% if projet.categorie.visible or projet.annee %}
+      <p class="carte__meta">{% if projet.categorie.visible %}<span>{{ projet.categorie.nom }}</span>{% endif %}{% if projet.annee %}<span>{{ projet.annee }}</span>{% endif %}</p>
+      {% endif %}
+      {% if projet.resume %}<p class="page-entete__sous-titre">{{ projet.resume }}</p>{% endif %}
+      {% if projet.lien_github or projet.lien_demo %}
+      <div class="actions">
+        {% if projet.lien_demo %}<a class="bouton bouton--plein" href="{{ projet.lien_demo }}" target="_blank" rel="noopener">Voir la démo</a>{% endif %}
+        {% if projet.lien_github %}<a class="bouton" href="{{ projet.lien_github }}" target="_blank" rel="noopener">Code sur <span translate="no">GitHub</span></a>{% endif %}
+      </div>
+      {% endif %}
+    </div>
+  </header>
+
+  <div class="conteneur conteneur--etroit projet__corps">
+    {% if projet.image %}
+    <div class="projet__couverture" style="view-transition-name:projet-{{ projet.pk }}">
+      <img src="{{ projet.image|image:1400 }}" alt="{{ projet.alt }}">
+    </div>
+    {% endif %}
+
+    {% with technologies=projet.technologies.all %}{% if technologies %}
+    <section class="reveler">
+      <h2>Technologies</h2>
+      <ul class="badges badges--grands" translate="no">
+        {% for technologie in technologies %}<li style="--j:{{ forloop.counter0 }}">{{ technologie.nom }}</li>{% endfor %}
+      </ul>
+    </section>
+    {% endif %}{% endwith %}
+
+    {% for titre, texte in blocs %}
+    <section class="reveler">
+      <h2>{{ titre }}</h2>
+      <div class="prose">{{ texte|markdown }}</div>
+    </section>
+    {% endfor %}
+
+    {% with images=projet.images.all %}{% if images %}
+    <section class="reveler">
+      <h2>Galerie</h2>
+      <div class="galerie">
+        {% for element in images %}
+        <figure>
+          <a href="{{ element.image|image:1800 }}"><img src="{{ element.image|image:900 }}" alt="{% firstof element.alt element.legende projet.titre %}" loading="lazy"></a>
+          {% if element.legende %}<figcaption>{{ element.legende }}</figcaption>{% endif %}
+        </figure>
+        {% endfor %}
+      </div>
+    </section>
+    {% endif %}{% endwith %}
+
+    {% if collaborations %}
+    <section class="reveler">
+      <h2>{% firstof sections.collaborations.titre "Collaborations" %}</h2>
+      <ul class="personnes">
+        {% for collaboration in collaborations %}
+        <li>
+          {% if collaboration.lien %}<a href="{{ collaboration.lien }}" target="_blank" rel="noopener" translate="no">{{ collaboration.nom }}</a>{% else %}<span translate="no">{{ collaboration.nom }}</span>{% endif %}{% if collaboration.role %} — {{ collaboration.role }}{% endif %}
+        </li>
+        {% endfor %}
+      </ul>
+    </section>
+    {% endif %}
+  </div>
+</article>
+{% endblock %}

@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+{% load contenu %}
+
+{% block titre %}{{ page.titre }} · {{ nom_site }}{% endblock %}
+{% block og_titre %}{{ page.titre }}{% endblock %}
+
+{% block contenu %}
+{% include "_entete_page.html" with titre=page.titre %}
+<section class="bloc bloc--serre">
+  <div class="conteneur conteneur--etroit">
+    <div class="prose">{{ page.contenu|markdown }}</div>
+  </div>
+</section>
+{% endblock %}

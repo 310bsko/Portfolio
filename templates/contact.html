@@ -1,0 +1,50 @@
+{% extends "base.html" %}
+
+{% block contenu %}
+{% include "_entete_page.html" with titre=section.titre sous_titre=section.sous_titre %}
+<section class="bloc bloc--serre">
+  <div class="conteneur contact{% if not formulaire %} contact--simple{% endif %}">
+    {% if formulaire %}
+    <div class="reveler">
+      {% if envoye %}
+      <p class="alerte alerte--succes" role="status">Merci, votre message a bien été envoyé. Je vous réponds dès que possible.</p>
+      {% endif %}
+      {% if trop_de_messages %}
+      <p class="alerte alerte--erreur" role="alert">Trop de messages envoyés en peu de temps. Merci de réessayer plus tard.</p>
+      {% endif %}
+      <form class="formulaire" method="post" action="{% url 'contact' %}" novalidate>
+        {% csrf_token %}
+        {% if formulaire.non_field_errors %}<p class="alerte alerte--erreur" role="alert">{{ formulaire.non_field_errors|join:" " }}</p>{% endif %}
+        {% for champ in formulaire.visible_fields %}
+        {% if champ.name == "site_web" %}
+        <div class="champ-piege" aria-hidden="true">
+          <label for="{{ champ.id_for_label }}">{{ champ.label }}</label>
+          <input type="text" name="site_web" id="{{ champ.id_for_label }}" tabindex="-1" autocomplete="off">
+        </div>
+        {% else %}
+        <div class="champ{% if champ.errors %} champ--erreur{% endif %}">
+          <label for="{{ champ.id_for_label }}">{{ champ.label }}{% if not champ.field.required %} <span class="champ__option">(facultatif)</span>{% endif %}</label>
+          {{ champ }}
+          {% for erreur in champ.errors %}<p class="champ__erreur" role="alert">{{ erreur }}</p>{% endfor %}
+        </div>
+        {% endif %}
+        {% endfor %}
+        <button class="bouton bouton--plein" data-aimant type="submit">Envoyer</button>
+      </form>
+    </div>
+    {% endif %}
+
+    {% if profil.email_public or profil.telephone_public or profil.localisation or profil.lien_github or profil.lien_linkedin or profil.lien_whatsapp or profil.lien_autre %}
+    <aside class="coordonnees reveler">
+      <h2>Coordonnées</h2>
+      <dl>
+        {% if profil.email_public %}<dt>Email</dt><dd><a href="mailto:{{ profil.email_public }}" translate="no">{{ profil.email_public }}</a></dd>{% endif %}
+        {% if profil.telephone_public %}<dt>Téléphone</dt><dd><a href="tel:{{ profil.telephone_public|cut:' ' }}" translate="no">{{ profil.telephone_public }}</a></dd>{% endif %}
+        {% if profil.localisation %}<dt>Localisation</dt><dd>{{ profil.localisation }}</dd>{% endif %}
+      </dl>
+      {% include "_reseaux.html" %}
+    </aside>
+    {% endif %}
+  </div>
+</section>
+{% endblock %}

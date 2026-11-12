@@ -1,0 +1,75 @@
+{% load static contenu %}<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{% block titre %}{% firstof section.seo_titre section.titre %} · {{ nom_site }}{% endblock %}</title>
+  {% block meta_description %}{% firstof section.seo_description parametres.description as description %}{% if description %}
+  <meta name="description" content="{{ description }}">
+  <meta property="og:description" content="{{ description }}">{% endif %}{% endblock %}
+  <meta property="og:type" content="website">
+  <meta property="og:locale" content="fr_FR">
+  <meta property="og:site_name" content="{{ nom_site }}">
+  <meta property="og:title" content="{% block og_titre %}{% firstof section.seo_titre section.titre nom_site %}{% endblock %}">
+  <meta property="og:url" content="{{ request.build_absolute_uri }}">
+  {% block og_image %}{% if parametres.image_partage %}<meta property="og:image" content="{{ parametres.image_partage|image:1200 }}">{% endif %}{% endblock %}
+  <link rel="canonical" href="{{ request.scheme }}://{{ request.get_host }}{{ request.path }}">
+  {% if parametres.favicon %}<link rel="icon" href="{{ parametres.favicon|image:64 }}">{% else %}<link rel="icon" href="data:,">{% endif %}
+  <link rel="preload" href="{% static 'polices/outfit-latin-wght-normal.woff2' %}" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="{% static 'polices/inter-latin-wght-normal.woff2' %}" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="{% static 'css/site.css' %}">
+  <script>document.documentElement.classList.add("js")</script>
+  <script src="{% static 'js/site.js' %}" defer></script>
+</head>
+<body>
+  <a class="evitement" href="#contenu">Aller au contenu</a>
+  {% block progression %}{% endblock %}
+
+  <header class="entete">
+    <div class="conteneur entete__barre">
+      <a class="logo" href="{% url 'accueil' %}" translate="no">
+        {% if profil.logo_image %}<img src="{{ profil.logo_image|image:320 }}" alt="{% firstof profil.logo_alt profil.nom_complet %}" height="36">{% else %}{{ profil.logo }}{% endif %}
+      </a>
+      <button class="menu-bouton" type="button" popovertarget="menu" aria-label="Ouvrir le menu">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path class="b1" d="M4 7h16"/><path class="b2" d="M4 12h16"/><path class="b3" d="M4 17h16"/></svg>
+      </button>
+      <nav class="menu" id="menu" popover aria-label="Navigation principale">
+        {% for lien in menu %}<a href="{{ lien.get_absolute_url }}"{% if lien.cle == section.cle %} aria-current="page"{% endif %}>{{ lien.titre }}</a>
+        {% endfor %}
+      </nav>
+    </div>
+  </header>
+
+  <main id="contenu">
+    {% block contenu %}{% endblock %}
+  </main>
+
+  <footer class="pied">
+    <div class="conteneur pied__grille">
+      <div>
+        <p class="pied__nom" translate="no">{{ profil.nom_complet }}</p>
+        {% if parametres.pied_texte %}<p>{{ parametres.pied_texte }}</p>{% endif %}
+        {% include "_reseaux.html" with classe="reseaux reseaux--pied" %}
+      </div>
+      <nav aria-label="Pied de page">
+        <ul class="pied__liens">
+          {% for lien in menu %}<li><a href="{{ lien.get_absolute_url }}">{{ lien.titre }}</a></li>
+          {% endfor %}
+        </ul>
+      </nav>
+      {% if pages_pied %}
+      <nav aria-label="Informations légales">
+        <ul class="pied__liens">
+          {% for lien in pages_pied %}<li><a href="{{ lien.get_absolute_url }}">{{ lien.titre }}</a></li>
+          {% endfor %}
+        </ul>
+      </nav>
+      {% endif %}
+    </div>
+    <div class="conteneur pied__bas">
+      <p>© {{ copyright_annees }} <span translate="no">{{ profil.nom_complet }}</span></p>
+      {% if parametres.mention_technique %}<p>{{ parametres.mention_technique }}</p>{% endif %}
+    </div>
+  </footer>
+</body>
+</html>
