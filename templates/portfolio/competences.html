@@ -7,18 +7,25 @@
   <div class="conteneur groupes">
     {% for nom, competences in groupes %}
     <section class="groupe reveler">
-      {% if nom %}<h2>{{ nom }}</h2>{% endif %}
+      {% if nom %}
+      <h2 class="groupe__titre">
+        <span>{{ nom }}</span>
+        <span class="groupe__compte">{{ competences|length }}</span>
+      </h2>
+      {% endif %}
       <ul class="competences">
         {% for competence in competences %}
         <li class="competence">
-          <p class="competence__nom">
-            {% if competence.icone %}<img src="{{ competence.icone|image:48 }}" alt="" width="22" height="22" loading="lazy">{% endif %}
-            <span translate="no">{{ competence.nom }}</span>
+          <span class="competence__icone{% if not competence.icone %} competence__icone--initiale{% endif %}" aria-hidden="true">
+            {% if competence.icone %}<img src="{{ competence.icone|image:96 }}" alt="" width="32" height="32" loading="lazy">{% else %}{{ competence.nom|slice:":1"|upper }}{% endif %}
+          </span>
+          <div class="competence__corps">
+            <p class="competence__nom" translate="no">{{ competence.nom }}</p>
             {% if competence.niveau %}<span class="niveau niveau--{{ competence.niveau }}">{{ competence.get_niveau_display }}</span>{% endif %}
-          </p>
-          {% with lies=competence.projets.all %}{% if lies and sections.projets %}
-          <p class="competence__projets">{% for projet in lies %}<a href="{{ projet.get_absolute_url }}">{{ projet.titre }}</a>{% if not forloop.last %}, {% endif %}{% endfor %}</p>
-          {% endif %}{% endwith %}
+            {% with lies=competence.projets.all %}{% if lies and sections.projets %}
+            <p class="competence__projets">{% for projet in lies %}<a href="{{ projet.get_absolute_url }}">{{ projet.titre }}</a>{% if not forloop.last %}, {% endif %}{% endfor %}</p>
+            {% endif %}{% endwith %}
+          </div>
         </li>
         {% endfor %}
       </ul>

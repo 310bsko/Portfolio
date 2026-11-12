@@ -310,15 +310,43 @@ a:hover { color: var(--accent-survol); }
 }
 
 /* ---------- Compétences ---------- */
-.groupes { display: grid; gap: 2.5rem; }
-.groupe h2 { margin-bottom: 1rem; font-size: 1.3rem; }
-.competences { display: grid; gap: .75rem; grid-template-columns: repeat(auto-fill, minmax(min(100%, 240px), 1fr)); }
-.competence { padding: .9rem 1rem; background: var(--carte); border: 1px solid var(--bordure); border-radius: var(--rayon-petit); }
-.competence__nom { display: flex; flex-wrap: wrap; align-items: center; gap: .5rem; font-weight: 600; }
-.competence__projets { margin-top: .35rem; font-size: .88rem; color: var(--secondaire); }
+.groupes { display: grid; gap: 3rem; }
+/* Titre de catégorie : barre d'accent, compteur, filet qui prolonge le titre. */
+.groupe__titre {
+  display: flex; align-items: center; gap: .75rem;
+  margin-bottom: 1.25rem; padding-left: .9rem;
+  font-size: clamp(1.3rem, 3vw, 1.6rem); font-weight: 650;
+  border-left: 4px solid var(--accent);
+}
+.groupe__titre::after { content: ""; flex: 1; height: 1px; background: var(--bordure); }
+.groupe__compte {
+  display: inline-grid; place-items: center; min-width: 1.9rem; height: 1.9rem; padding-inline: .5rem;
+  font-family: var(--textes); font-size: .85rem; font-weight: 600; letter-spacing: 0;
+  color: var(--accent); background: #EFF6FF; border: 1px solid #BFDBFE; border-radius: 999px;
+}
+.competences { display: grid; gap: 1rem; grid-template-columns: repeat(auto-fill, minmax(min(100%, 260px), 1fr)); }
+.competence {
+  display: flex; align-items: center; gap: 1rem; padding: 1rem 1.1rem;
+  background: var(--carte); border: 1px solid var(--bordure); border-radius: var(--rayon);
+}
+.competence:hover { border-color: #BFDBFE; box-shadow: var(--ombre); }
+@media (prefers-reduced-motion: no-preference) {
+  .competence { transition: border-color var(--duree) var(--courbe), box-shadow var(--duree) var(--courbe), transform var(--duree) var(--courbe); }
+  .competence:hover { transform: translateY(-2px); }
+}
+/* Pastille d'icône : fond blanc et cadre pour que les logos clairs restent lisibles. */
+.competence__icone {
+  /* Pastille plus large que haute : les logos horizontaux (Spark, Hadoop…) gardent une taille lisible. */
+  display: grid; place-items: center; flex: none; width: 88px; height: 60px; padding: 10px;
+  background: #fff; border: 1px solid var(--bordure); border-radius: 14px;
+}
+.competence__icone img { width: 100%; height: 100%; object-fit: contain; }
+.competence__icone--initiale { font-family: var(--titres); font-size: 1.4rem; font-weight: 650; color: var(--accent); background: #EFF6FF; border-color: #BFDBFE; }
+.competence__corps { display: grid; justify-items: start; gap: .35rem; min-width: 0; }
+.competence__nom { font-size: 1.05rem; font-weight: 600; line-height: 1.3; }
+.competence__projets { font-size: .88rem; color: var(--secondaire); }
 .competence__projets a { display: inline-block; padding-block: .2rem; }
 .niveau { padding: .1rem .55rem; font-size: .75rem; font-weight: 600; color: var(--secondaire); background: var(--attenue); border: 1px solid var(--bordure); border-radius: 999px; }
-.competence .niveau { margin-left: auto; }
 .niveau--maitrise { color: #1E40AF; background: #EFF6FF; border-color: #BFDBFE; }
 
 /* ---------- Parcours (frise) ---------- */

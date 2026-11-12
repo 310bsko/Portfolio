@@ -5,6 +5,11 @@
       "name": "portfolio",
       "runtimeExecutable": "uv",
       "runtimeArgs": ["run", "python", "manage.py", "runserver", "8765", "--noreload"],
+      "env": {
+        "DATABASE_URL": "sqlite:///C:/Users/Public/MonSite/db.sqlite3",
+        "CLOUDINARY_URL": "",
+        "DEBUG": "True"
+      },
       "port": 8765
     }
   ]

@@ -166,7 +166,7 @@ def test_competence_sans_categorie_dans_autres(client):
     Competence.objects.create(nom="Python", categorie=langages)
     Competence.objects.create(nom="Git")
     page = client.get(reverse("competences")).content.decode()
-    assert "<h2>Autres</h2>" in page
+    assert "<span>Autres</span>" in page
 
 
 # --- Suppression
