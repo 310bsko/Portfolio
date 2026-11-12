@@ -96,6 +96,13 @@ class Profil(LigneUnique):
     )
     logo_image = ChampImage("logo (image)", upload_to=Chemin("logo"), blank=True)
     logo_alt = models.CharField("texte alternatif du logo", max_length=160, blank=True)
+    apropos_photo = ChampImage(
+        "photo de l'À propos", upload_to=Chemin("profil"), blank=True,
+        help_text="Différente de la photo de l'accueil. Vide = pas de photo sur l'À propos.",
+    )
+    apropos_photo_alt = models.CharField(
+        "texte alternatif de la photo de l'À propos", max_length=160, blank=True
+    )
     apropos_titre = models.CharField("titre de l'À propos", max_length=120, blank=True)
     apropos_texte = models.TextField(
         "texte de l'À propos", blank=True, help_text="Texte libre, mis en forme en Markdown."

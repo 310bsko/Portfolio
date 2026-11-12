@@ -38,7 +38,9 @@ Règles communes :
 *Contenu du site > Profil* : nom, titre, accroche, photo, disponibilité, email, CV,
 réseaux, logo, texte de l'À propos.
 
-- **Photo** : JPEG, PNG ou WebP, 2 Mo au maximum.
+- **Photo** : JPEG, PNG ou WebP, 2 Mo au maximum. Elle s'affiche sur l'accueil.
+- **Photo de l'À propos** (bloc « À propos ») : une photo différente pour la page À propos.
+  Vide = pas de photo sur cette page.
 - **CV** : PDF, 4 Mo au maximum. Le bouton « Télécharger mon CV » apparaît dès qu'un CV est envoyé.
 - **Logo** : le texte est utilisé si aucune image n'est fournie.
 

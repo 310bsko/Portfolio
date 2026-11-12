@@ -4,10 +4,10 @@
 {% block contenu %}
 {% include "_entete_page.html" with titre=section.titre sous_titre=section.sous_titre %}
 <section class="bloc bloc--serre">
-  <div class="conteneur apropos{% if not profil.photo %} apropos--sans-photo{% endif %}">
-    {% if profil.photo %}
+  <div class="conteneur apropos{% if not profil.apropos_photo %} apropos--sans-photo{% endif %}">
+    {% if profil.apropos_photo %}
     <div class="apropos__photo reveler">
-      <img src="{{ profil.photo|image:640 }}" alt="{% firstof profil.photo_alt profil.nom_complet %}" width="320" height="320" loading="lazy">
+      <img src="{{ profil.apropos_photo|image:640 }}" alt="{% firstof profil.apropos_photo_alt profil.nom_complet %}" width="320" height="320" loading="lazy">
     </div>
     {% endif %}
     <div class="reveler">

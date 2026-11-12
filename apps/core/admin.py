@@ -45,13 +45,22 @@ class ProfilAdmin(AdminLigneUnique):
                         "lien_autre_libelle"]},
         ),
         ("Logo", {"fields": ["logo_texte", "logo_image", "logo_alt"]}),
-        ("À propos", {"fields": ["apropos_titre", "apropos_texte"]}),
+        (
+            "À propos",
+            {"fields": ["apropos_photo", "apropos_photo_alt", "apropos_titre", "apropos_texte"]},
+        ),
     ]
 
     def save_model(self, request, obj, form, change):
         super().save_model(request, obj, form, change)
         avertir_sans_alt(
-            request, obj, [("photo", "photo_alt", "Photo"), ("logo_image", "logo_alt", "Logo")]
+            request,
+            obj,
+            [
+                ("photo", "photo_alt", "Photo"),
+                ("apropos_photo", "apropos_photo_alt", "Photo de l'À propos"),
+                ("logo_image", "logo_alt", "Logo"),
+            ],
         )
 
 

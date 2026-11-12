@@ -130,3 +130,28 @@ def test_fiche_reenregistree_sans_relire_les_fichiers_stockes(monkeypatch):
     for nom in ("photo", "cv"):
         champ = Profil._meta.get_field(nom)
         champ.clean(getattr(profil, nom), profil)
+
+
+def test_photo_de_l_apropos_distincte_de_celle_de_l_accueil(client):
+    from django.urls import reverse
+
+    profil = Profil.objects.get()
+    profil.photo = fabriquer_image(nom="accueil.png")
+    profil.apropos_photo = fabriquer_image(nom="apropos.png")
+    profil.save()
+    profil.refresh_from_db()
+    accueil = client.get(reverse("accueil")).content.decode()
+    apropos = client.get(reverse("apropos")).content.decode()
+    assert profil.photo.name in accueil and profil.apropos_photo.name not in accueil
+    assert profil.apropos_photo.name in apropos and profil.photo.name not in apropos
+
+
+def test_apropos_sans_photo_dediee(client):
+    from django.urls import reverse
+
+    profil = Profil.objects.get()
+    profil.photo = fabriquer_image(nom="accueil.png")
+    profil.save()
+    profil.refresh_from_db()
+    apropos = client.get(reverse("apropos")).content.decode()
+    assert profil.photo.name not in apropos and "apropos--sans-photo" in apropos
