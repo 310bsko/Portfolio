@@ -14,7 +14,10 @@
 <article class="projet">
   <header class="page-entete">
     <div class="conteneur conteneur--etroit entree">
-      <a class="lien-retour" href="{% url 'projets' %}">{% firstof sections.projets.titre "Projets" %}</a>
+      <a class="retour" href="{% url 'projets' %}">
+        <span class="retour__fleche" aria-hidden="true"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M12 19l-7-7 7-7"/></svg></span>
+        {% firstof sections.projets.titre "Projets" %}
+      </a>
       <h1 style="view-transition-name:titre-{{ projet.pk }}">{{ projet.titre }}</h1>
       {% if projet.categorie.visible or projet.annee %}
       <p class="carte__meta">{% if projet.categorie.visible %}<span>{{ projet.categorie.nom }}</span>{% endif %}{% if projet.annee %}<span>{{ projet.annee }}</span>{% endif %}</p>
@@ -38,9 +41,22 @@
 
     {% with technologies=projet.technologies.all %}{% if technologies %}
     <section class="reveler">
-      <h2>Technologies</h2>
-      <ul class="badges badges--grands" translate="no">
-        {% for technologie in technologies %}<li style="--j:{{ forloop.counter0 }}">{{ technologie.nom }}</li>{% endfor %}
+      <div class="section-titre">
+        <h2>Technologies</h2>
+        <span class="section-titre__compte">{{ technologies|length }} outil{{ technologies|length|pluralize }}</span>
+      </div>
+      <ul class="technos">
+        {% for technologie in technologies %}
+        <li class="techno" style="--j:{{ forloop.counter0 }}">
+          <span class="techno__icone{% if not technologie.icone %} techno__icone--initiale{% endif %}" aria-hidden="true">
+            {% if technologie.icone %}<img src="{{ technologie.icone|image:96 }}" alt="" width="28" height="28" loading="lazy">{% else %}{{ technologie.nom|slice:":1"|upper }}{% endif %}
+          </span>
+          <span class="techno__texte">
+            <span class="techno__nom" translate="no">{{ technologie.nom }}</span>
+            {% if technologie.categorie.visible %}<span class="techno__detail">{{ technologie.categorie.nom }}</span>{% elif technologie.niveau %}<span class="techno__detail">{{ technologie.get_niveau_display }}</span>{% endif %}
+          </span>
+        </li>
+        {% endfor %}
       </ul>
     </section>
     {% endif %}{% endwith %}

@@ -275,6 +275,36 @@ a:hover { color: var(--accent-survol); }
 .projet__corps h2 { margin-bottom: 1rem; }
 .projet__couverture { border-radius: var(--rayon); overflow: hidden; border: 1px solid var(--bordure); background: var(--attenue); }
 .projet__couverture { background: var(--carte); }
+
+/* Retour vers la liste des projets */
+.retour {
+  display: inline-flex; align-items: center; gap: .6rem; min-height: 44px; margin-bottom: 1.5rem;
+  padding: .3rem 1rem .3rem .3rem; font-size: .92rem; font-weight: 500; text-decoration: none; color: var(--secondaire);
+  background: var(--carte); border: 1px solid var(--bordure); border-radius: 999px;
+}
+.retour__fleche {
+  display: grid; place-items: center; width: 34px; height: 34px; border-radius: 50%;
+  color: var(--accent); background: #EFF6FF; border: 1px solid #BFDBFE;
+}
+.retour:hover { color: var(--texte); border-color: #A1A1AA; }
+.retour:hover .retour__fleche { color: #fff; background: var(--accent); border-color: var(--accent); }
+
+/* Technologies du projet : tuiles avec icône */
+.technos { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 190px), 1fr)); gap: .75rem; }
+.techno {
+  position: relative; display: flex; align-items: center; gap: .85rem; padding: .85rem 1rem;
+  background: var(--carte); border: 1px solid var(--bordure); border-radius: 14px; overflow: hidden;
+}
+.techno::before { content: ""; position: absolute; left: 0; top: 0; bottom: 0; width: 3px; background: var(--accent); opacity: .85; }
+.techno__icone {
+  display: grid; place-items: center; width: 44px; height: 44px; flex: none;
+  background: #fff; border: 1px solid var(--bordure); border-radius: 12px;
+}
+.techno__icone img { width: 28px; height: 28px; object-fit: contain; }
+.techno__icone--initiale { font-family: var(--titres); font-size: 1.25rem; font-weight: 650; color: var(--accent); background: #EFF6FF; border-color: #BFDBFE; }
+.techno__texte { display: flex; flex-direction: column; min-width: 0; line-height: 1.3; }
+.techno__nom { font-family: var(--titres); font-size: 1.05rem; font-weight: 600; color: var(--texte); }
+.techno__detail { font-size: .78rem; color: var(--secondaire); }
 .projet__couverture img { width: 100%; max-height: min(65vh, 520px); object-fit: contain; }
 
 .section-titre { display: flex; align-items: baseline; justify-content: space-between; gap: 1rem; margin-bottom: 1rem; }
@@ -557,6 +587,16 @@ a:hover { color: var(--accent-survol); }
     transition-delay: calc(.1s + min(var(--j, 0) * 55ms, 600ms));
   }
   .js .reveler.vu .badges--grands li, .js .badges--grands.reveler.vu li { opacity: 1; transform: none; }
+  .js .reveler .techno {
+    opacity: 0; transform: translateY(14px) scale(.94);
+    transition: opacity .45s var(--courbe), transform .55s var(--rebond), border-color var(--duree), box-shadow .3s var(--courbe);
+    transition-delay: calc(.1s + min(var(--j, 0) * 60ms, 600ms));
+  }
+  .js .reveler.vu .techno { opacity: 1; transform: none; }
+  .js .reveler.pret .techno { transition-delay: 0s; }
+  .techno:hover, .js .reveler.vu .techno:hover { transform: translateY(-3px); border-color: #BFDBFE; box-shadow: var(--ombre); }
+  .retour, .retour__fleche { transition: color var(--duree), background-color var(--duree), border-color var(--duree), transform .3s var(--courbe); }
+  .retour:hover .retour__fleche { transform: translateX(-3px); }
 
   /* Frise du parcours : les points apparaissent, le trait se dessine en défilant */
   .js .frise__ligne::before { transform: scale(0); transition: transform .6s var(--rebond) .25s; }
