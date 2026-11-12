@@ -54,12 +54,21 @@
 
     {% with images=projet.images.all %}{% if images %}
     <section class="reveler">
-      <h2>Galerie</h2>
-      <div class="galerie">
+      <div class="section-titre">
+        <h2>Galerie</h2>
+        <span class="section-titre__compte">{{ images|length }} image{{ images|length|pluralize }}</span>
+      </div>
+      <div class="galerie" data-galerie>
         {% for element in images %}
-        <figure>
-          <a href="{{ element.image|image:1800 }}"><img src="{{ element.image|image:900 }}" alt="{% firstof element.alt element.legende projet.titre %}" loading="lazy"></a>
-          {% if element.legende %}<figcaption>{{ element.legende }}</figcaption>{% endif %}
+        <figure class="galerie__element">
+          <a class="galerie__cadre" href="{{ element.image|image:1800 }}" data-legende="{{ element.legende }}" aria-label="Agrandir l'image {{ forloop.counter }}{% if element.legende %} : {{ element.legende }}{% endif %}">
+            <img src="{{ element.image|image:900 }}" alt="{% firstof element.alt element.legende projet.titre %}" loading="lazy">
+            <span class="galerie__loupe" aria-hidden="true"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"/></svg></span>
+          </a>
+          <figcaption class="galerie__legende">
+            <span class="galerie__numero">{{ forloop.counter|stringformat:"02d" }}</span>
+            <span>{% firstof element.legende "Aperçu" %}</span>
+          </figcaption>
         </figure>
         {% endfor %}
       </div>
