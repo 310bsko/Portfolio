@@ -107,3 +107,26 @@ def test_cloudinary_recoit_le_contenu_d_une_image_nettoyee(monkeypatch):
     nom = StockageCloudinary().save("profil/abc.jpg", ContentFile(b"octets-image"))
     assert nom == "profil/abc.jpg"
     assert envoye["fichier"] == ("abc.jpg", b"octets-image")
+
+
+def test_fiche_reenregistree_sans_relire_les_fichiers_stockes(monkeypatch):
+    """Régression : réenregistrer le profil demandait size() à Cloudinary (erreur 500)."""
+    from django.core.files.storage import Storage
+
+    from apps.core.fichiers import ChampImage, ChampPDF
+
+    class StockageSansTaille(Storage):
+        def size(self, name):
+            raise NotImplementedError
+
+        def exists(self, name):
+            return True
+
+    stockage = StockageSansTaille()
+    for champ in Profil._meta.fields:
+        if isinstance(champ, (ChampImage, ChampPDF)):
+            monkeypatch.setattr(champ, "storage", stockage)
+    profil = Profil(photo="profil/abc.jpg", cv="cv/abc.pdf")
+    for nom in ("photo", "cv"):
+        champ = Profil._meta.get_field(nom)
+        champ.clean(getattr(profil, nom), profil)

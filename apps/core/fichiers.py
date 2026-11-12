@@ -38,7 +38,18 @@ def _format_reel(fichier):
         fichier.seek(position)
 
 
+def _deja_enregistre(fichier):
+    """Fichier déjà stocké (validé à son envoi) : on ne le relit pas.
+
+    Sans ce test, réenregistrer une fiche demandait la taille du fichier au stockage
+    Cloudinary, qui ne la fournit pas (NotImplementedError, erreur 500).
+    """
+    return getattr(fichier, "_committed", False) is True
+
+
 def valider_image(fichier):
+    if _deja_enregistre(fichier):
+        return
     if fichier.size > settings.TAILLE_MAX_IMAGE:
         raise ValidationError(
             f"L'image dépasse {_mo(settings.TAILLE_MAX_IMAGE)}. Réduisez-la avant de l'envoyer."
@@ -48,6 +59,8 @@ def valider_image(fichier):
 
 
 def valider_pdf(fichier):
+    if _deja_enregistre(fichier):
+        return
     if fichier.size > settings.TAILLE_MAX_PDF:
         raise ValidationError(f"Le PDF dépasse {_mo(settings.TAILLE_MAX_PDF)}.")
     position = fichier.tell() if hasattr(fichier, "tell") else 0
