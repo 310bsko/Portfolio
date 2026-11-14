@@ -25,6 +25,15 @@ def markdown(texte):
 
 
 @register.filter
+def premier_paragraphe(texte):
+    """Premier paragraphe d'un texte Markdown (première ligne non vide), pour un aperçu."""
+    for ligne in (texte or "").splitlines():
+        if ligne.strip():
+            return markdown(ligne.strip())
+    return ""
+
+
+@register.filter
 def image(fichier, largeur=None):
     """Adresse de l'image, redimensionnée et convertie par Cloudinary quand il est actif."""
     if not fichier:

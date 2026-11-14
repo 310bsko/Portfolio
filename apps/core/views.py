@@ -9,7 +9,7 @@ from apps.portfolio.models import Competence, Parcours, Projet
 from .models import PageStatique, SectionPublique
 
 COMPETENCES_ACCUEIL = 10
-PARCOURS_ACCUEIL = 3
+PARCOURS_ACCUEIL = 2  # lignes par famille (formations, expériences, certifications)
 
 
 def section_ou_404(cle):
@@ -24,7 +24,7 @@ def section_visible(cle):
 def accueil(request):
     section = SectionPublique.objects.filter(cle="accueil").first()
     contexte = {
-        "section": section, "projets_vedette": [], "competences_cles": [], "parcours_recent": [],
+        "section": section, "projets_vedette": [], "competences_cles": [], "parcours_groupes": [],
     }
     if section_visible("projets"):
         contexte["projets_vedette"] = (
@@ -41,9 +41,7 @@ def accueil(request):
         # Sans compétence clé cochée, l'accueil montre quand même les premières.
         contexte["competences_cles"] = cles or list(competences[:COMPETENCES_ACCUEIL])
     if section_visible("parcours"):
-        contexte["parcours_recent"] = list(
-            Parcours.objects.filter(visible=True).chronologie()[:PARCOURS_ACCUEIL]
-        )
+        contexte["parcours_groupes"] = Parcours.objects.par_famille(limite=PARCOURS_ACCUEIL)
     return render(request, "accueil.html", contexte)
 
 

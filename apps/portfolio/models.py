@@ -164,6 +164,21 @@ class ParcoursQuerySet(models.QuerySet):
         """Du plus récent au plus ancien ; sans date, l'ordre manuel s'applique."""
         return self.order_by(F("date_debut").desc(nulls_last=True), "ordre", "id")
 
+    def par_famille(self, limite=None):
+        """Lignes visibles groupées en Formations, Expériences, Certifications, sans groupe vide."""
+        lignes = list(self.filter(visible=True).chronologie())
+        T = Parcours.Type
+        familles = [
+            ("Formations", {T.FORMATION}),
+            ("Expériences", {T.STAGE, T.EXPERIENCE, T.ASSOCIATION, T.EVENEMENT}),
+            ("Certifications", {T.CERTIFICATION}),
+        ]
+        groupes = [
+            (nom, [ligne for ligne in lignes if ligne.type in types][:limite])
+            for nom, types in familles
+        ]
+        return [groupe for groupe in groupes if groupe[1]]
+
 
 class Parcours(Ordonne):
     class Type(models.TextChoices):

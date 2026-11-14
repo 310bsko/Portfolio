@@ -73,17 +73,7 @@ def competences(request):
 
 def parcours(request):
     section = section_ou_404("parcours")
-    lignes = list(Parcours.objects.filter(visible=True).chronologie())
-    T = Parcours.Type
-    familles = [
-        ("Formations", {T.FORMATION}),
-        ("Expériences", {T.STAGE, T.EXPERIENCE, T.ASSOCIATION, T.EVENEMENT}),
-        ("Certifications", {T.CERTIFICATION}),
-    ]
-    groupes = [
-        (nom, [ligne for ligne in lignes if ligne.type in types]) for nom, types in familles
-    ]
-    groupes = [groupe for groupe in groupes if groupe[1]]
+    groupes = Parcours.objects.par_famille()
     return render(request, "portfolio/parcours.html", {"section": section, "groupes": groupes})
 
 

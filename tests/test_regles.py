@@ -58,16 +58,30 @@ def test_accueil_montre_les_competences_cles_sinon_les_premieres(client):
     assert "Spark" in accueil and "Python" not in accueil
 
 
-def test_accueil_montre_les_trois_dernieres_lignes_du_parcours(client):
-    for annee in range(2021, 2026):
+def test_accueil_montre_le_parcours_par_famille(client):
+    for annee in range(2022, 2026):
         Parcours.objects.create(
-            titre=f"Étape {annee}", type="formation", date_debut=f"{annee}-09-01"
+            titre=f"Diplôme {annee}", type="formation", date_debut=f"{annee}-09-01"
         )
+    Parcours.objects.create(titre="Stage data", type="stage", date_debut="2025-06-01")
+    Parcours.objects.create(titre="AWS", type="certification")
     Parcours.objects.create(titre="Masquée", type="stage", date_debut="2026-01-01", visible=False)
     accueil = client.get(reverse("accueil")).content.decode()
-    assert all(f"Étape {annee}" in accueil for annee in (2023, 2024, 2025))
-    assert "Étape 2022" not in accueil and "Masquée" not in accueil
-    assert accueil.index("Étape 2025") < accueil.index("Étape 2023")
+    # Les deux plus récentes de chaque famille : Formations, Expériences, Certifications.
+    assert "Diplôme 2025" in accueil and "Diplôme 2024" in accueil
+    assert "Diplôme 2023" not in accueil and "Masquée" not in accueil
+    positions = [accueil.index(t) for t in ("Formations", "Diplôme 2025", "Diplôme 2024",
+                                             "Expériences", "Stage data", "Certifications", "AWS")]
+    assert positions == sorted(positions)
+
+
+def test_accueil_montre_le_debut_de_l_apropos(client):
+    profil = Profil.charger()
+    profil.apropos_texte = "Passionné de data.\nDeuxième paragraphe détaillé."
+    profil.save()
+    accueil = client.get(reverse("accueil")).content.decode()
+    assert "Passionné de data." in accueil
+    assert "Deuxième paragraphe" not in accueil
     assert reverse("apropos") in accueil
 
 

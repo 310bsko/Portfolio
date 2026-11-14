@@ -466,15 +466,25 @@ a:hover { color: var(--accent-survol); }
 }
 .frise__lieu { color: var(--secondaire); }
 
-/* Aperçu du parcours sur l'accueil : les dernières lignes en cartes */
-.apercu-parcours { display: grid; gap: 1rem; grid-template-columns: repeat(auto-fill, minmax(min(100%, 300px), 1fr)); }
-.apercu-parcours__ligne {
-  display: grid; align-content: start; gap: .8rem; padding: 1.25rem;
+/* Aperçu du parcours sur l'accueil : une carte par famille (formations, expériences, certifications) */
+.apercu-parcours { display: grid; gap: 1rem; grid-template-columns: repeat(auto-fit, minmax(min(100%, 300px), 1fr)); }
+.apercu-parcours__famille {
+  display: grid; align-content: start; gap: 1rem; padding: 1.25rem;
   background: var(--carte); border: 1px solid var(--bordure); border-radius: var(--rayon);
 }
-.apercu-parcours .frise__tete h3 { font-size: 1.05rem; line-height: 1.3; }
-.apercu-parcours .frise__logo { width: 84px; height: 52px; }
-.apercu-parcours__suite { margin-top: 1.5rem; }
+.apercu-parcours__titre {
+  font-size: .82rem; font-weight: 600; letter-spacing: .06em; text-transform: uppercase; color: var(--accent);
+}
+.apercu-parcours ol { display: grid; gap: 1rem; }
+.apercu-parcours li + li { padding-top: 1rem; border-top: 1px solid var(--bordure); }
+.apercu-parcours .frise__tete { align-items: flex-start; }
+.apercu-parcours h4 { font-size: 1.02rem; line-height: 1.3; }
+.apercu-parcours .frise__logo { width: 72px; height: 48px; }
+.apercu-parcours__date { font-size: .88rem; color: var(--secondaire); }
+
+/* Aperçu de l'À propos sur l'accueil */
+.apercu-apropos { display: grid; gap: 1.25rem; max-width: 46rem; }
+.apercu-apropos__texte { font-size: 1.15rem; line-height: 1.7; }
 
 /* ---------- Collaborations ---------- */
 .grille-collaborations { display: grid; gap: 1rem; grid-template-columns: repeat(auto-fill, minmax(min(100%, 300px), 1fr)); }

@@ -37,6 +37,20 @@
   </div>
 </section>
 
+{% if sections.apropos and profil.apropos_texte %}
+<section class="bloc bloc--attenue">
+  <div class="conteneur">
+    <div class="bloc__tete reveler">
+      <h2>{% firstof profil.apropos_titre sections.apropos.titre %}</h2>
+    </div>
+    <div class="apercu-apropos reveler">
+      <div class="prose apercu-apropos__texte">{{ profil.apropos_texte|premier_paragraphe }}</div>
+      <a class="lien-fleche" href="{% url 'apropos' %}">En savoir plus sur moi</a>
+    </div>
+  </div>
+</section>
+{% endif %}
+
 {% if projets_vedette %}
 <section class="bloc">
   <div class="conteneur">
@@ -66,32 +80,33 @@
 </section>
 {% endif %}
 
-{% if parcours_recent %}
+{% if parcours_groupes %}
 <section class="bloc">
   <div class="conteneur">
     <div class="bloc__tete reveler">
       <h2>{% firstof sections.parcours.titre "Parcours" %}</h2>
       <a class="lien-fleche" href="{% url 'parcours' %}">Tout mon parcours</a>
     </div>
-    <ol class="apercu-parcours">
-      {% for ligne in parcours_recent %}
-      <li class="apercu-parcours__ligne reveler" style="--j:{{ forloop.counter0 }}">
-        <p class="frise__meta">
-          <span class="niveau">{{ ligne.get_type_display }}</span>
-          {% if ligne.date_debut %}<span>{{ ligne.date_debut|date:"M Y" }} – {% if ligne.date_fin %}{{ ligne.date_fin|date:"M Y" }}{% else %}aujourd'hui{% endif %}</span>
-          {% elif ligne.date_fin %}<span>{{ ligne.date_fin|date:"M Y" }}</span>{% endif %}
-        </p>
-        <div class="frise__tete">
-          {% if ligne.logo %}<span class="frise__logo" aria-hidden="true"><img src="{{ ligne.logo|image:240 }}" alt="" width="68" height="44" loading="lazy"></span>{% endif %}
-          <div>
-            <h3>{{ ligne.titre }}</h3>
-            {% if ligne.organisme or ligne.lieu %}<p class="frise__lieu">{{ ligne.organisme }}{% if ligne.organisme and ligne.lieu %} · {% endif %}{{ ligne.lieu }}</p>{% endif %}
-          </div>
-        </div>
-      </li>
+    <div class="apercu-parcours">
+      {% for nom, lignes in parcours_groupes %}
+      <div class="apercu-parcours__famille reveler" style="--j:{{ forloop.counter0 }}">
+        <h3 class="apercu-parcours__titre">{{ nom }}</h3>
+        <ol>
+          {% for ligne in lignes %}
+          <li class="frise__tete">
+            {% if ligne.logo %}<span class="frise__logo" aria-hidden="true"><img src="{{ ligne.logo|image:240 }}" alt="" width="68" height="44" loading="lazy"></span>{% endif %}
+            <div>
+              <h4>{{ ligne.titre }}</h4>
+              {% if ligne.organisme or ligne.lieu %}<p class="frise__lieu">{{ ligne.organisme }}{% if ligne.organisme and ligne.lieu %} · {% endif %}{{ ligne.lieu }}</p>{% endif %}
+              {% if ligne.date_debut %}<p class="apercu-parcours__date">{{ ligne.date_debut|date:"M Y" }} – {% if ligne.date_fin %}{{ ligne.date_fin|date:"M Y" }}{% else %}aujourd'hui{% endif %}</p>
+              {% elif ligne.date_fin %}<p class="apercu-parcours__date">{{ ligne.date_fin|date:"M Y" }}</p>{% endif %}
+            </div>
+          </li>
+          {% endfor %}
+        </ol>
+      </div>
       {% endfor %}
-    </ol>
-    {% if sections.apropos %}<p class="apercu-parcours__suite reveler"><a class="lien-fleche" href="{% url 'apropos' %}">En savoir plus sur moi</a></p>{% endif %}
+    </div>
   </div>
 </section>
 {% endif %}
