@@ -466,6 +466,16 @@ a:hover { color: var(--accent-survol); }
 }
 .frise__lieu { color: var(--secondaire); }
 
+/* Aperçu du parcours sur l'accueil : les dernières lignes en cartes */
+.apercu-parcours { display: grid; gap: 1rem; grid-template-columns: repeat(auto-fill, minmax(min(100%, 300px), 1fr)); }
+.apercu-parcours__ligne {
+  display: grid; align-content: start; gap: .8rem; padding: 1.25rem;
+  background: var(--carte); border: 1px solid var(--bordure); border-radius: var(--rayon);
+}
+.apercu-parcours .frise__tete h3 { font-size: 1.05rem; line-height: 1.3; }
+.apercu-parcours .frise__logo { width: 84px; height: 52px; }
+.apercu-parcours__suite { margin-top: 1.5rem; }
+
 /* ---------- Collaborations ---------- */
 .grille-collaborations { display: grid; gap: 1rem; grid-template-columns: repeat(auto-fill, minmax(min(100%, 300px), 1fr)); }
 .collaboration { display: flex; gap: 1rem; padding: 1.15rem; background: var(--carte); border: 1px solid var(--bordure); border-radius: var(--rayon); }

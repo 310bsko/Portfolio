@@ -48,6 +48,29 @@ def test_parcours_et_collaborations_masques(client):
     assert "Awa" in collaborations and "Caché" not in collaborations
 
 
+def test_accueil_montre_les_competences_cles_sinon_les_premieres(client):
+    Competence.objects.create(nom="Python")
+    Competence.objects.create(nom="Cobol", visible=False)
+    accueil = client.get(reverse("accueil")).content.decode()
+    assert "Python" in accueil and "Cobol" not in accueil
+    Competence.objects.create(nom="Spark", mise_en_avant=True)
+    accueil = client.get(reverse("accueil")).content.decode()
+    assert "Spark" in accueil and "Python" not in accueil
+
+
+def test_accueil_montre_les_trois_dernieres_lignes_du_parcours(client):
+    for annee in range(2021, 2026):
+        Parcours.objects.create(
+            titre=f"Étape {annee}", type="formation", date_debut=f"{annee}-09-01"
+        )
+    Parcours.objects.create(titre="Masquée", type="stage", date_debut="2026-01-01", visible=False)
+    accueil = client.get(reverse("accueil")).content.decode()
+    assert all(f"Étape {annee}" in accueil for annee in (2023, 2024, 2025))
+    assert "Étape 2022" not in accueil and "Masquée" not in accueil
+    assert accueil.index("Étape 2025") < accueil.index("Étape 2023")
+    assert reverse("apropos") in accueil
+
+
 def test_filtre_par_categorie(client):
     data = Categorie.objects.create(nom="Data", domaine="projet")
     Projet.objects.create(titre="Projet A", statut="publie", categorie=data)

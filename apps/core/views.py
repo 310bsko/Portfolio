@@ -4,9 +4,12 @@ from django.http import HttpResponse
 from django.shortcuts import get_object_or_404, render
 from django.urls import reverse
 
-from apps.portfolio.models import Competence, Projet
+from apps.portfolio.models import Competence, Parcours, Projet
 
 from .models import PageStatique, SectionPublique
+
+COMPETENCES_ACCUEIL = 10
+PARCOURS_ACCUEIL = 3
 
 
 def section_ou_404(cle):
@@ -20,7 +23,9 @@ def section_visible(cle):
 
 def accueil(request):
     section = SectionPublique.objects.filter(cle="accueil").first()
-    contexte = {"section": section, "projets_vedette": [], "competences_cles": []}
+    contexte = {
+        "section": section, "projets_vedette": [], "competences_cles": [], "parcours_recent": [],
+    }
     if section_visible("projets"):
         contexte["projets_vedette"] = (
             Projet.objects.publies()
@@ -31,7 +36,14 @@ def accueil(request):
             )[:5]
         )
     if section_visible("competences"):
-        contexte["competences_cles"] = Competence.objects.publiques().filter(mise_en_avant=True)
+        competences = Competence.objects.publiques()
+        cles = list(competences.filter(mise_en_avant=True))
+        # Sans compétence clé cochée, l'accueil montre quand même les premières.
+        contexte["competences_cles"] = cles or list(competences[:COMPETENCES_ACCUEIL])
+    if section_visible("parcours"):
+        contexte["parcours_recent"] = list(
+            Parcours.objects.filter(visible=True).chronologie()[:PARCOURS_ACCUEIL]
+        )
     return render(request, "accueil.html", contexte)
 
 
