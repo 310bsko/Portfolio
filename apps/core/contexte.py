@@ -22,4 +22,5 @@ def site(request):
         "sections": {section.cle: section for section in menu},
         "pages_pied": PageStatique.objects.filter(visible=True),
         "copyright_annees": f"{debut}–{annee}" if debut and debut < annee else str(annee),
+        "statistiques_vercel": settings.STATISTIQUES_VERCEL,
     }

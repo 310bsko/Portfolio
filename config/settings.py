@@ -28,6 +28,10 @@ CSRF_TRUSTED_ORIGINS = env.list("CSRF_TRUSTED_ORIGINS", default=["https://*.verc
 # Adresse d'administration non standard (ADM-01), à garder pour soi.
 ADMIN_URL = env("ADMIN_URL", default="gestion/").strip("/") + "/"
 
+# Statistiques de visite Vercel Web Analytics : actives seulement en ligne
+# (Vercel définit VERCEL=1), pour ne pas compter les visites locales.
+STATISTIQUES_VERCEL = env.bool("VERCEL", default=False)
+
 INSTALLED_APPS = [
     "apps.core.site_admin.AdminPortfolioConfig",
     "django.contrib.auth",
