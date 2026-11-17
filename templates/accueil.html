@@ -8,9 +8,11 @@
 <section class="hero">
   <div class="conteneur hero__grille">
     <div class="hero__texte entree">
-      <p class="hero__salut">Bonjour, je suis</p>
-      <h1 translate="no" aria-label="{{ profil.nom_complet|title }}">{% for mot in profil.nom_complet.split %}<span class="mot" aria-hidden="true"><span style="--i:{{ forloop.counter0 }}">{{ mot|title }}</span></span>{% if not forloop.last %} {% endif %}{% endfor %}</h1>
-      {% if profil.titre %}<p class="hero__titre"><span>{{ profil.titre }}</span><svg class="hero__trait" viewBox="0 0 300 12" preserveAspectRatio="none" aria-hidden="true"><path d="M2 8c40-5 90-7 140-5s100 4 156-2" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"/></svg></p>{% endif %}
+      {% if profil.disponible and profil.disponibilite_texte %}
+      <p class="dispo"><span data-ecrire>{{ profil.disponibilite_texte }}</span></p>
+      {% endif %}
+      <h1 translate="no" aria-label="{{ profil.nom_complet }}">{% for mot in profil.nom_complet.split %}<span class="mot" aria-hidden="true"><span style="--i:{{ forloop.counter0 }}">{{ mot }}</span></span>{% if not forloop.last %} {% endif %}{% endfor %}</h1>
+      {% if profil.titre %}<p class="hero__titre">{{ profil.titre }}</p>{% endif %}
       {% if profil.accroche %}<p class="hero__accroche">{{ profil.accroche|linebreaksbr }}</p>{% endif %}
       <div class="actions">
         {% if sections.projets and parametres.bouton_projets %}<a class="bouton bouton--plein" data-aimant href="{% url 'projets' %}">{{ parametres.bouton_projets }}</a>{% endif %}
@@ -18,23 +20,15 @@
         {% if profil.cv and parametres.bouton_cv %}<a class="bouton bouton--discret" href="{{ profil.cv.url }}" download>
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 4v11m0 0-4-4m4 4 4-4M5 20h14"/></svg>{{ parametres.bouton_cv }}</a>{% endif %}
       </div>
-      <div class="hero__pied">
-        {% if profil.localisation %}<p class="hero__lieu"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 21s-7-6.2-7-11.5a7 7 0 0 1 14 0C19 14.8 12 21 12 21z"/><circle cx="12" cy="9.5" r="2.5"/></svg>{{ profil.localisation }}</p>{% endif %}
-        {% include "_reseaux.html" %}
-      </div>
+      {% if profil.localisation %}<p class="hero__lieu">{{ profil.localisation }}</p>{% endif %}
+      {% include "_reseaux.html" %}
     </div>
     {% if profil.photo %}
     <div class="hero__photo">
-      <div class="hero__cadre" data-incliner="4">
-        <span class="hero__fond" aria-hidden="true"></span>
-        <img src="{{ profil.photo|image:720 }}" alt="{% firstof profil.photo_alt profil.nom_complet %}" width="360" height="450" fetchpriority="high">
-        {% if profil.disponible and profil.disponibilite_texte %}
-        <p class="dispo"><span class="dispo__point" aria-hidden="true"></span>{{ profil.disponibilite_texte }}</p>
-        {% endif %}
+      <div class="hero__cadre" data-incliner="7">
+        <img src="{{ profil.photo|image:720 }}" alt="{% firstof profil.photo_alt profil.nom_complet %}" width="360" height="360" fetchpriority="high">
       </div>
     </div>
-    {% elif profil.disponible and profil.disponibilite_texte %}
-    <p class="dispo"><span class="dispo__point" aria-hidden="true"></span>{{ profil.disponibilite_texte }}</p>
     {% endif %}
   </div>
 </section>
@@ -117,12 +111,26 @@
 <section class="bloc">
   <div class="conteneur">
     <div class="appel reveler">
-      <span class="appel__halo" aria-hidden="true"></span>
-      <div>
-        <h2>{{ sections.contact.titre }}</h2>
-        {% if sections.contact.sous_titre %}<p>{{ sections.contact.sous_titre }}</p>{% endif %}
+      <div class="appel__texte">
+        <p class="appel__surtitre">{{ sections.contact.titre }}</p>
+        <h2>{% firstof sections.contact.sous_titre "Travaillons ensemble." %}</h2>
+        {% if profil.photo %}
+        <div class="appel__qui">
+          <img src="{{ profil.photo|image:96 }}" alt="" width="48" height="48" loading="lazy">
+          <p><strong>{{ profil.nom_complet|title }}</strong>{% if profil.titre %}<span>{{ profil.titre }}</span>{% endif %}</p>
+        </div>
+        {% endif %}
       </div>
-      <a class="bouton bouton--plein" data-aimant href="{% url 'contact' %}">{% firstof parametres.bouton_contact "Me contacter" %}</a>
+      <ul class="canaux">
+        {% if profil.email_public %}<li class="canaux__copiable">
+          <a class="canal" href="mailto:{{ profil.email_public }}"><span class="canal__icone"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="3"/><path d="m4 7 8 6 8-6"/></svg></span><span class="canal__corps"><span class="canal__nom">Email</span><span class="canal__valeur">{{ profil.email_public }}</span></span></a>
+          <button class="canal__copier" type="button" data-copier="{{ profil.email_public }}" aria-label="Copier l'adresse email" title="Copier l'adresse"><svg class="copier__icone" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="9" width="11" height="11" rx="2.5"/><path d="M5 15V6a2 2 0 0 1 2-2h8"/></svg><svg class="copier__ok" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m5 12.5 4.5 4.5L19 7.5"/></svg></button>
+        </li>{% endif %}
+        {% if profil.lien_whatsapp %}<li><a class="canal" href="{{ profil.lien_whatsapp }}" rel="noopener" target="_blank"><span class="canal__icone"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 11.5a8 8 0 0 1-11.6 7.1L4 20l1.4-4.2A8 8 0 1 1 20 11.5z"/></svg></span><span class="canal__corps"><span class="canal__nom">WhatsApp</span><span class="canal__valeur">Discuter en direct</span></span></a></li>{% endif %}
+        {% if profil.telephone_public %}<li><a class="canal" href="tel:{{ profil.telephone_public|cut:' ' }}"><span class="canal__icone"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 4h3l2 5-2.5 1.5a11 11 0 0 0 6 6L15 14l5 2v3a2 2 0 0 1-2 2A16 16 0 0 1 3 6a2 2 0 0 1 2-2z"/></svg></span><span class="canal__corps"><span class="canal__nom">Téléphone</span><span class="canal__valeur">{{ profil.telephone_public }}</span></span></a></li>{% endif %}
+        {% if profil.lien_linkedin %}<li><a class="canal" href="{{ profil.lien_linkedin }}" rel="me noopener" target="_blank"><span class="canal__icone"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="4"/><path d="M8 11v5M8 8v.01M12 16v-5m0 2.5a2.5 2.5 0 0 1 5 0V16"/></svg></span><span class="canal__corps"><span class="canal__nom">LinkedIn</span><span class="canal__valeur">Voir mon profil</span></span></a></li>{% endif %}
+        <li class="canaux__principal"><a class="canal" href="{% url 'contact' %}"><span class="canal__icone"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 20h4L19 9a2.8 2.8 0 0 0-4-4L4 16v4z"/><path d="m13.5 6.5 4 4"/></svg></span><span class="canal__corps"><span class="canal__nom">Formulaire</span><span class="canal__valeur">{% firstof parametres.bouton_contact "Me contacter" %}</span></span></a></li>
+      </ul>
     </div>
   </div>
 </section>

@@ -4,6 +4,49 @@
   var mouvement = window.matchMedia("(prefers-reduced-motion: no-preference)").matches;
   var souris = window.matchMedia("(hover: hover) and (pointer: fine)").matches;
 
+  /* 0. Texte qui s'écrit lettre par lettre au chargement (disponibilité du hero).
+     Les lecteurs d'écran reçoivent le texte complet d'un coup. */
+  document.querySelectorAll("[data-ecrire]").forEach(function (zone) {
+    var texte = zone.textContent.trim();
+    if (!mouvement || !texte) return;
+    var lu = document.createElement("span");
+    lu.className = "masque";
+    lu.textContent = texte;
+    zone.parentNode.insertBefore(lu, zone);
+    zone.setAttribute("aria-hidden", "true");
+    zone.textContent = "";
+    zone.classList.add("ecrit");
+    var n = 0;
+    function taper() {
+      n += 1;
+      zone.textContent = texte.slice(0, n);
+      if (n < texte.length) {
+        // Rythme irrégulier, avec une courte pause entre les mots : plus naturel
+        setTimeout(taper, texte.charAt(n - 1) === " " ? 90 : 28 + Math.random() * 38);
+      } else {
+        zone.classList.add("fini");
+        setTimeout(function () { zone.classList.remove("ecrit"); }, 1800);
+      }
+    }
+    setTimeout(taper, 450);
+  });
+
+  /* Copie d'une adresse en un clic (section contact) */
+  document.querySelectorAll("[data-copier]").forEach(function (bouton) {
+    var libelle = bouton.getAttribute("aria-label");
+    bouton.addEventListener("click", function () {
+      if (!navigator.clipboard) return;
+      navigator.clipboard.writeText(bouton.dataset.copier).then(function () {
+        bouton.classList.add("copie");
+        bouton.setAttribute("aria-label", "Adresse copiée");
+        setTimeout(function () {
+          bouton.classList.remove("copie");
+          bouton.setAttribute("aria-label", libelle);
+        }, 2000);
+      });
+    });
+  });
+
   /* 1. Apparition des blocs au défilement */
   var blocs = document.querySelectorAll(".reveler");
   function montrer(bloc) {

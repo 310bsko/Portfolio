@@ -156,22 +156,9 @@ a:hover { color: var(--accent-survol); }
 .lien-retour::before { content: "←"; transition: transform var(--duree) var(--courbe); }
 .lien-retour { color: var(--secondaire); font-weight: 500; }
 
-/* ---------- Accueil : hero ----------
-   Ton « humaniste » : papier chaud, salutation en serif, photo dans une arche. */
-.hero {
-  --sable: #F6EFE6; --argile: #E9D8C4; --terre: #B4532A;
-  --serif: "Iowan Old Style", "Palatino Linotype", Palatino, "Book Antiqua", Georgia, serif;
-  position: relative; isolation: isolate; overflow: hidden;
-  padding-block: clamp(3rem, 8vw, 6rem);
-  background:
-    radial-gradient(60rem 30rem at 85% 10%, rgba(233, 216, 196, .55), transparent 70%),
-    linear-gradient(to bottom, #FBF7F2, var(--fond));
-}
-/* Grain de papier très léger */
-.hero::before {
-  content: ""; position: absolute; inset: 0; z-index: -1; pointer-events: none; opacity: .35;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='g'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 .4 0 0 0 0 .3 0 0 0 0 .2 0 0 0 .08 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23g)'/%3E%3C/svg%3E");
-}
+/* ---------- Accueil : hero ---------- */
+.hero { position: relative; isolation: isolate; overflow: hidden; padding-block: clamp(3rem, 9vw, 6.5rem); }
+.hero__cadre { position: relative; }
 /* Mots et lignes de titre : chacun dans un masque, pour pouvoir « monter » à l'apparition */
 .mot, .ligne { overflow: hidden; padding-block: .12em; margin-block: -.12em; }
 .mot { display: inline-block; vertical-align: bottom; }
@@ -179,57 +166,31 @@ a:hover { color: var(--accent-survol); }
 .mot > span { display: inline-block; }
 .ligne > span { display: block; }
 .trait { display: block; width: 3rem; height: 4px; margin-top: 1.1rem; border-radius: 2px; background: var(--accent); transform-origin: 0 50%; }
-.hero__grille { display: grid; gap: 2.75rem; align-items: center; }
-.hero__salut {
-  margin: 0 0 .35rem; font-family: var(--serif); font-style: italic;
-  font-size: clamp(1.2rem, 3vw, 1.5rem); color: var(--terre);
-}
-.hero h1 { font-size: clamp(2.5rem, 7.5vw, 4.5rem); font-weight: 600; letter-spacing: -.035em; line-height: 1.02; }
-.hero__titre {
-  position: relative; display: inline-block; margin-top: 1rem; padding-bottom: .5rem;
-  font-family: var(--serif); font-style: italic; font-weight: 400;
-  font-size: clamp(1.2rem, 3vw, 1.6rem); color: var(--texte);
-}
-.hero__trait { position: absolute; left: 0; bottom: 0; width: 100%; height: .6rem; color: var(--terre); opacity: .7; }
-.hero__accroche { margin-top: 1.1rem; max-width: 34rem; font-size: clamp(1rem, 2.2vw, 1.12rem); line-height: 1.75; color: var(--secondaire); }
-.hero .actions { margin-top: 2rem; }
-.hero__pied {
-  display: flex; flex-wrap: wrap; align-items: center; gap: .5rem 1.5rem;
-  margin-top: 2rem; padding-top: 1.25rem; border-top: 1px solid var(--argile); max-width: 34rem;
-}
-.hero__lieu { display: inline-flex; align-items: center; gap: .45rem; margin: 0; color: var(--secondaire); font-size: .95rem; }
-.hero__lieu svg { color: var(--terre); flex: none; }
-.hero__pied .reseaux { margin: 0; gap: .25rem 1.1rem; }
-.hero__pied .reseaux a { color: var(--texte); text-decoration: none; border-bottom: 1px solid var(--argile); }
-.hero__pied .reseaux a:hover { color: var(--terre); border-color: var(--terre); }
-
-/* Photo en arche, posée sur une forme d'argile décalée */
-.hero__photo { justify-self: center; width: min(100%, 280px); padding: 0 1.25rem 2.5rem 0; }
-.hero__cadre { position: relative; }
-.hero__fond {
-  position: absolute; z-index: -1; inset: 1.25rem -1.25rem -1.25rem 1.25rem;
-  border-radius: 999px 999px 28px 28px; background: var(--argile);
-}
+.hero__grille { display: grid; gap: 2.5rem; align-items: center; }
+.hero__titre { margin-top: .75rem; font-family: var(--titres); font-size: clamp(1.15rem, 3vw, 1.5rem); font-weight: 500; color: var(--accent); }
+.hero__accroche { margin-top: 1rem; max-width: 36rem; font-size: clamp(1rem, 2.2vw, 1.15rem); color: var(--secondaire); }
+.hero__lieu { margin-top: 1.5rem; color: var(--secondaire); font-size: .95rem; }
+.hero__photo { justify-self: center; width: min(100%, 260px); }
 .hero__photo img {
-  width: 100%; aspect-ratio: 4 / 5; object-fit: cover; object-position: 50% 10%;
-  border-radius: 999px 999px 28px 28px; background: var(--sable);
-  box-shadow: 0 24px 48px -20px rgba(80, 50, 20, .35);
+  width: 100%; aspect-ratio: 1; object-fit: cover; object-position: 50% 8%;
+  border-radius: 50%; border: 1px solid var(--bordure); box-shadow: var(--ombre); background: var(--attenue);
 }
-.dispo {
-  display: inline-flex; align-items: center; gap: .6rem; margin: 0; padding: .6rem 1rem;
-  font-size: .88rem; font-weight: 600; line-height: 1.35; color: var(--texte);
-  background: #fff; border: 1px solid var(--argile); border-radius: 14px;
-  box-shadow: 0 10px 30px -12px rgba(80, 50, 20, .3);
+.dispo { margin: 0 0 1rem; font-size: .95rem; font-weight: 600; color: var(--dispo); }
+/* Curseur clignotant pendant que le texte s'écrit (voir site.js) */
+[data-ecrire].ecrit::after {
+  content: ""; display: inline-block; width: 2px; height: 1.05em; margin-left: 2px;
+  vertical-align: -.18em; background: currentColor; animation: clignoter .9s steps(1) infinite;
 }
-.hero__cadre .dispo { position: absolute; left: -1.5rem; right: 1rem; bottom: -2.5rem; }
-.dispo__point { flex: none; width: .55rem; height: .55rem; border-radius: 50%; background: var(--dispo); }
+.masque { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
 
 .reseaux { display: flex; flex-wrap: wrap; gap: .25rem 1rem; margin-top: .75rem; }
 .reseaux a { display: inline-flex; align-items: center; min-height: 44px; font-weight: 500; }
+.hero__lieu + .reseaux { margin-top: .25rem; }
 
 @media (min-width: 860px) {
-  .hero__grille { grid-template-columns: minmax(0, 1.5fr) minmax(0, 1fr); gap: 4.5rem; }
-  .hero__photo { justify-self: end; width: min(100%, 360px); }
+  /* La photo s'aligne sur le haut du texte (et non au milieu), en format portrait. */
+  .hero__grille { grid-template-columns: minmax(0, 1.6fr) minmax(0, 1fr); gap: 4.5rem; align-items: start; }
+  .hero__photo { justify-self: end; width: min(100%, 330px); margin-top: .5rem; }
 }
 
 /* ---------- Blocs et en-têtes de page ---------- */
@@ -546,17 +507,66 @@ a:hover { color: var(--accent-survol); }
 .coordonnees dd { margin: 0 0 .85rem; }
 .coordonnees dd a { display: inline-flex; align-items: center; min-height: 44px; }
 
-/* ---------- Appel à l'action, erreur ---------- */
-.appel__halo {
-  position: absolute; z-index: -1; right: -8rem; top: -10rem; width: 26rem; aspect-ratio: 1; border-radius: 50%;
-  background: radial-gradient(circle, rgba(37, 99, 235, .55), transparent 66%); pointer-events: none;
-}
+/* ---------- Appel à l'action (bas de l'accueil), erreur ---------- */
 .appel {
   position: relative; isolation: isolate; overflow: hidden;
-  display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 1.5rem;
-  padding: clamp(1.5rem, 5vw, 2.75rem); color: #fff; background: var(--pied); border-radius: 24px;
+  display: grid; gap: 2rem; align-items: center;
+  padding: clamp(1.5rem, 5vw, 3rem);
+  background: var(--carte); border: 1px solid var(--bordure); border-radius: 28px; box-shadow: var(--ombre);
 }
-.appel p { margin-top: .5rem; color: #D4D4D8; }
+.appel__surtitre {
+  display: inline-flex; align-items: center; gap: .6rem; margin: 0;
+  font-size: .8rem; font-weight: 600; letter-spacing: .08em; text-transform: uppercase; color: var(--accent);
+}
+.appel__surtitre::before { content: ""; width: 1.5rem; height: 2px; border-radius: 2px; background: currentColor; }
+.appel h2 { margin-top: .75rem; max-width: 18ch; font-size: clamp(1.6rem, 4.2vw, 2.4rem); }
+.appel__qui { display: flex; align-items: center; gap: .8rem; margin-top: 1.75rem; }
+.appel__qui img {
+  flex: none; width: 48px; height: 48px; border-radius: 50%; object-fit: cover; object-position: 50% 10%;
+  border: 2px solid var(--carte); box-shadow: 0 0 0 1px var(--bordure); background: var(--attenue);
+}
+.appel__qui p { display: grid; margin: 0; font-size: .95rem; line-height: 1.35; }
+.appel__qui p span { font-size: .85rem; color: var(--secondaire); }
+
+.canaux { display: grid; gap: .6rem; margin: 0; padding: 0; list-style: none; }
+.canaux li {
+  display: flex; align-items: center; background: var(--fond); border: 1px solid var(--bordure); border-radius: 16px;
+  transition: border-color var(--duree), background-color var(--duree), box-shadow .3s var(--courbe);
+}
+.canaux li:hover { background: var(--carte); border-color: #D4D4D8; box-shadow: var(--ombre); }
+.canal {
+  flex: 1; min-width: 0; display: flex; align-items: center; gap: .9rem; padding: .8rem 1rem;
+  color: var(--texte); text-decoration: none; border-radius: 15px;
+}
+.canal::after { content: "→"; margin-left: auto; padding-left: .5rem; color: var(--secondaire); transition: transform var(--duree) var(--courbe), color var(--duree); }
+.canaux li:hover .canal::after { transform: translateX(4px); color: var(--texte); }
+.canal__icone {
+  flex: none; display: grid; place-items: center; width: 2.6rem; height: 2.6rem;
+  border-radius: 12px; background: var(--attenue); color: var(--texte);
+}
+.canal__corps { display: grid; min-width: 0; line-height: 1.3; }
+.canal__nom { font-size: .75rem; font-weight: 600; letter-spacing: .05em; text-transform: uppercase; color: var(--secondaire); }
+.canal__valeur { overflow: hidden; font-weight: 500; text-overflow: ellipsis; white-space: nowrap; }
+.canaux__copiable .canal__valeur { white-space: normal; overflow-wrap: anywhere; }
+/* L'email se copie en un clic (le bouton n'apparaît qu'avec le script) */
+.canal__copier {
+  display: none; flex: none; place-items: center; width: 44px; height: 44px; margin-right: .45rem;
+  color: var(--secondaire); background: transparent; border: 0; border-radius: 12px; cursor: pointer;
+}
+.js .canal__copier { display: grid; }
+.js .canaux__copiable .canal::after { content: none; }
+.canal__copier:hover { color: var(--texte); background: var(--attenue); }
+.canal__copier .copier__ok, .canal__copier.copie .copier__icone { display: none; }
+.canal__copier.copie .copier__ok { display: block; }
+.canal__copier.copie { color: var(--dispo); }
+.canaux .canaux__principal { background: var(--accent); border-color: var(--accent); }
+.canaux .canaux__principal:hover { background: var(--accent-survol); border-color: var(--accent-survol); }
+.canaux__principal .canal, .canaux__principal .canal::after, .canaux li.canaux__principal:hover .canal::after { color: #fff; }
+.canaux__principal .canal__icone { background: none; color: #fff; }
+.canaux__principal .canal__nom { color: rgba(255, 255, 255, .75); }
+@media (min-width: 860px) {
+  .appel { grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr); gap: 3.5rem; }
+}
 .erreur { padding-block: clamp(4rem, 14vw, 8rem); text-align: center; }
 .erreur__code { font-family: var(--titres); font-size: clamp(4rem, 18vw, 7rem); font-weight: 700; line-height: 1; color: var(--accent); }
 .erreur p { margin-top: .75rem; color: var(--secondaire); }
@@ -595,19 +605,11 @@ a:hover { color: var(--accent-survol); }
   .trait { animation: tirer var(--duree-lente) var(--courbe) both .4s; }
   .page-entete__sous-titre { animation: entree var(--duree-lente) var(--courbe) both .3s; }
 
-  /* 2. Hero : photo qui se pose, halos qui dérivent, décor qui flotte */
+  /* 2. Hero : photo qui se pose, décor qui flotte */
   .hero__photo { animation: photo 1.1s var(--courbe) both .25s; }
-  .appel__halo { animation: derive 14s ease-in-out infinite alternate; }
-  .hero__trait path { stroke-dasharray: 320; animation: dessiner 1.1s var(--courbe) both .7s; }
-  .hero__cadre .dispo { animation: surgir .6s var(--rebond) both 1s; }
   .hero__cadre {
     transform: perspective(900px) rotateX(var(--rx, 0deg)) rotateY(var(--ry, 0deg));
     transition: transform .35s var(--courbe);
-  }
-  .dispo__point { position: relative; }
-  .dispo__point::after {
-    content: ""; position: absolute; inset: 0; border-radius: 50%; background: var(--dispo);
-    animation: onde 2.2s ease-out infinite;
   }
   .erreur__code { animation: flotter 3.5s ease-in-out infinite alternate; }
   .alerte { animation: surgir .55s var(--rebond) both; }
@@ -746,11 +748,8 @@ a:hover { color: var(--accent-survol); }
 @keyframes monter { from { transform: translateY(110%); } }
 @keyframes tirer { from { transform: scaleX(0); } }
 @keyframes photo { from { opacity: 0; transform: translateY(30px) scale(.9) rotate(-3deg); } }
-@keyframes derive { to { transform: translate3d(-5rem, 3.5rem, 0) scale(1.18); } }
-@keyframes tourner { to { transform: rotate(360deg); } }
-@keyframes dessiner { from { stroke-dashoffset: 320; } }
+@keyframes clignoter { 50% { opacity: 0; } }
 @keyframes flotter { to { transform: translateY(-12px); } }
-@keyframes onde { from { opacity: .7; transform: scale(1); } to { opacity: 0; transform: scale(3.2); } }
 @keyframes surgir { from { opacity: 0; transform: scale(.94) translateY(8px); } }
 @keyframes tracer { from { transform: scaleY(0); } }
 @keyframes quitter { to { opacity: .1; transform: translateY(-36px) scale(.97); } }
