@@ -70,8 +70,9 @@ def test_accueil_montre_le_parcours_par_famille(client):
     # Les trois plus récentes de chaque famille : Formations, Expériences, Certifications.
     assert all(f"Diplôme {annee}" in accueil for annee in (2025, 2024, 2023))
     assert "Diplôme 2022" not in accueil and "Masquée" not in accueil
-    positions = [accueil.index(t) for t in ("Formations", "Diplôme 2025", "Diplôme 2024", "Diplôme 2023",
-                                             "Expériences", "Stage data", "Certifications", "AWS")]
+    ordre = ("Formations", "Diplôme 2025", "Diplôme 2024", "Diplôme 2023",
+             "Expériences", "Stage data", "Certifications", "AWS")
+    positions = [accueil.index(t) for t in ordre]
     assert positions == sorted(positions)
 
 
