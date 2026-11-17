@@ -102,6 +102,9 @@ a:hover { color: var(--accent-survol); }
 }
 .logo:hover { color: var(--accent); }
 .logo img { height: 36px; width: auto; }
+/* Marque « SB » (même dessin que le favicon) devant le nom */
+.logo { gap: .6rem; }
+.logo .logo__marque { width: 30px; height: 30px; flex: none; }
 
 .menu-bouton {
   display: none; align-items: center; justify-content: center;
@@ -235,6 +238,9 @@ a:hover { color: var(--accent-survol); }
 }
 .carte__image { aspect-ratio: 16 / 10; background: var(--attenue); overflow: hidden; }
 .carte__image img { width: 100%; height: 100%; object-fit: cover; }
+/* Image en hauteur ou carrée (un logo, repéré par site.js) : affichée en entière, sans rognage */
+.carte__image--entiere { background: #fff; border-bottom: 1px solid var(--bordure); }
+.carte__image--entiere img { object-fit: contain; padding: clamp(.75rem, 3%, 1.5rem); }
 .carte__corps { display: flex; flex-direction: column; gap: .6rem; padding: 1.15rem 1.25rem 1.35rem; }
 .carte__meta { display: flex; flex-wrap: wrap; gap: .25rem .75rem; font-size: .82rem; font-weight: 600; letter-spacing: .04em; text-transform: uppercase; color: var(--ocre); }
 .carte__meta span + span::before { content: "·"; margin-right: .75rem; }
@@ -320,17 +326,15 @@ a:hover { color: var(--accent-survol); }
   background: var(--carte); border: 1px solid var(--bordure); border-radius: var(--rayon); overflow: hidden;
 }
 .galerie__cadre {
-  --pad: clamp(.75rem, 3vw, 1.25rem);
-  position: relative; display: block; aspect-ratio: 4 / 3;
-  background:
-    radial-gradient(circle at 1px 1px, rgba(9, 9, 11, .07) 1px, transparent 0) 0 0 / 14px 14px,
-    var(--attenue);
+  --pad: clamp(.5rem, 2vw, .9rem);
+  position: relative; display: block; aspect-ratio: 16 / 10;
+  background: var(--attenue);
   cursor: zoom-in; overflow: hidden;
 }
 .galerie__cadre img {
   position: absolute; inset: var(--pad); width: calc(100% - 2 * var(--pad)); height: calc(100% - 2 * var(--pad));
   max-width: none; object-fit: contain;
-  filter: drop-shadow(0 2px 4px rgba(9, 9, 11, .08)) drop-shadow(0 10px 20px rgba(9, 9, 11, .14));
+  filter: drop-shadow(0 1px 3px rgba(27, 31, 27, .10)) drop-shadow(0 6px 14px rgba(27, 31, 27, .08));
 }
 .galerie__loupe {
   position: absolute; right: .75rem; top: .75rem; display: grid; place-items: center; width: 36px; height: 36px;

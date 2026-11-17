@@ -14,7 +14,10 @@
   <meta property="og:url" content="{{ request.build_absolute_uri }}">
   {% block og_image %}{% if parametres.image_partage %}<meta property="og:image" content="{{ parametres.image_partage|image:1200 }}">{% endif %}{% endblock %}
   <link rel="canonical" href="{{ request.scheme }}://{{ request.get_host }}{{ request.path }}">
-  {% if parametres.favicon %}<link rel="icon" href="{{ parametres.favicon|image:64 }}">{% else %}<link rel="icon" href="data:,">{% endif %}
+  {# Sans favicon choisi dans l'admin : initiales « SB » sur vert forêt. #}
+  {% if parametres.favicon %}<link rel="icon" href="{{ parametres.favicon|image:64 }}">
+  <link rel="apple-touch-icon" href="{{ parametres.favicon|image:180 }}">{% else %}<link rel="icon" href="{% static 'img/favicon.svg' %}" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="{% static 'img/apple-touch-icon.png' %}">{% endif %}
   <link rel="preload" href="{% static 'polices/bricolage-grotesque-latin-wght-normal.woff2' %}" as="font" type="font/woff2" crossorigin>
   <link rel="preload" href="{% static 'polices/ibm-plex-sans-latin-wght-normal.woff2' %}" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="{% static 'css/site.css' %}">
@@ -30,7 +33,7 @@
   <header class="entete">
     <div class="conteneur entete__barre">
       <a class="logo" href="{% url 'accueil' %}" translate="no">
-        {% if profil.logo_image %}<img src="{{ profil.logo_image|image:320 }}" alt="{% firstof profil.logo_alt profil.nom_complet %}" height="36">{% else %}{{ profil.logo }}{% endif %}
+        {% if profil.logo_image %}<img src="{{ profil.logo_image|image:320 }}" alt="{% firstof profil.logo_alt profil.nom_complet %}" height="36">{% else %}<img class="logo__marque" src="{% static 'img/favicon.svg' %}" alt="" width="30" height="30">{% firstof profil.logo_texte profil.nom_complet|title %}{% endif %}
       </a>
       <button class="menu-bouton" type="button" popovertarget="menu" aria-label="Ouvrir le menu">
         <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path class="b1" d="M4 7h16"/><path class="b2" d="M4 12h16"/><path class="b3" d="M4 17h16"/></svg>

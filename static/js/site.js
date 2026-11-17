@@ -167,6 +167,17 @@
     });
   });
 
+  /* Image de carte projet en hauteur ou carrée (souvent un logo) : affichée en entier.
+     Aussi sur téléphone et sans animation ; sans script, l'image reste simplement recadrée. */
+  document.querySelectorAll(".carte__image img").forEach(function (image) {
+    function verifier() {
+      if (image.naturalWidth && image.naturalHeight / image.naturalWidth > 0.8) {
+        image.parentNode.classList.add("carte__image--entiere");
+      }
+    }
+    if (image.complete) verifier(); else image.addEventListener("load", verifier);
+  });
+
   if (!mouvement || !souris) return;
 
   /* 2. Inclinaison en 3D et halo qui suit la souris (cartes de projet, photo) */

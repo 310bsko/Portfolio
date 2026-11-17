@@ -26,7 +26,7 @@
       {% if projet.lien_github or projet.lien_demo %}
       <div class="actions">
         {% if projet.lien_demo %}<a class="bouton bouton--plein" href="{{ projet.lien_demo }}" target="_blank" rel="noopener">Voir la démo</a>{% endif %}
-        {% if projet.lien_github %}<a class="bouton" href="{{ projet.lien_github }}" target="_blank" rel="noopener">Code sur <span translate="no">GitHub</span></a>{% endif %}
+        {% if projet.lien_github %}<a class="bouton" href="{{ projet.lien_github }}" target="_blank" rel="noopener"><span>Code sur <span translate="no">GitHub</span></span></a>{% endif %}
       </div>
       {% endif %}
     </div>
