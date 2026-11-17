@@ -51,6 +51,14 @@ class ProjetAdmin(admin.ModelAdmin):
     actions = ["publier", "mettre_en_brouillon", "dupliquer"]
     fieldsets = [
         (None, {"fields": ["titre", "statut", "mis_en_avant", "resume"]}),
+        (
+            "Carte du projet (étude de cas)",
+            {
+                "fields": ["probleme", "chiffre_cle", "chiffre_cle_legende"],
+                "description": "Ce qui apparaît sur la carte : le problème en une phrase, puis un "
+                "chiffre clé. Pour l'image de couverture, un schéma d'architecture fonctionne très bien.",
+            },
+        ),
         ("Image de couverture", {"fields": ["image", "image_alt"]}),
         ("Classement", {"fields": ["categorie", "technologies", "annee", "ordre", "slug"]}),
         ("Liens", {"fields": ["lien_github", "lien_demo"]}),

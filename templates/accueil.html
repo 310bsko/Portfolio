@@ -54,7 +54,7 @@
       <h2>{% firstof sections.projets.titre "Projets" %}</h2>
       <a class="lien-fleche" href="{% url 'projets' %}">Tous les projets</a>
     </div>
-    <div class="grille-projets grille-projets--vedette">
+    <div class="grille-projets">
       {% for projet in projets_vedette %}{% include "portfolio/_carte.html" with h="h3" %}{% endfor %}
     </div>
   </div>
