@@ -47,29 +47,28 @@
   </main>
 
   <footer class="pied">
-    <div class="conteneur pied__grille">
+    <div class="conteneur pied__signature">
       <div>
-        <p class="pied__nom" translate="no">{{ profil.nom_complet }}</p>
-        {% if parametres.pied_texte %}<p>{{ parametres.pied_texte }}</p>{% endif %}
-        {% include "_reseaux.html" with classe="reseaux reseaux--pied" %}
+        <p class="pied__nom" translate="no">{{ profil.nom_complet|title }}</p>
+        {% firstof parametres.pied_texte profil.titre as texte_pied %}{% if texte_pied %}<p class="pied__texte">{{ texte_pied }}</p>{% endif %}
+        {# Heure locale en direct, affichée par site.js (masquée sans script) #}
+        <p class="pied__heure" data-heure-locale="Africa/Abidjan" hidden><span></span> à Abidjan</p>
       </div>
-      <nav aria-label="Pied de page">
-        <ul class="pied__liens">
-          {% for lien in menu %}<li><a href="{{ lien.get_absolute_url }}">{{ lien.titre }}</a></li>
-          {% endfor %}
-        </ul>
-      </nav>
+      <div class="pied__actions">
+        {% include "_reseaux.html" with classe="reseaux reseaux--pied" %}
+        <a class="pied__remonter" href="#top">Haut de page <span aria-hidden="true">↑</span></a>
+      </div>
+    </div>
+    <div class="conteneur pied__bas">
+      <p>© {{ copyright_annees }} <span translate="no">{{ profil.nom_complet|title }}</span></p>
       {% if pages_pied %}
       <nav aria-label="Informations légales">
-        <ul class="pied__liens">
+        <ul class="pied__legal">
           {% for lien in pages_pied %}<li><a href="{{ lien.get_absolute_url }}">{{ lien.titre }}</a></li>
           {% endfor %}
         </ul>
       </nav>
       {% endif %}
-    </div>
-    <div class="conteneur pied__bas">
-      <p>© {{ copyright_annees }} <span translate="no">{{ profil.nom_complet }}</span></p>
       {% if parametres.mention_technique %}<p>{{ parametres.mention_technique }}</p>{% endif %}
     </div>
   </footer>

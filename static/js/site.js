@@ -31,6 +31,23 @@
     setTimeout(taper, 450);
   });
 
+  /* Heure locale en direct dans le pied de page (fuseau donné par data-heure-locale) */
+  document.querySelectorAll("[data-heure-locale]").forEach(function (zone) {
+    var cible = zone.querySelector("span");
+    var format;
+    try {
+      format = new Intl.DateTimeFormat("fr-FR", { hour: "2-digit", minute: "2-digit", timeZone: zone.dataset.heureLocale });
+    } catch (erreur) {
+      return; // fuseau inconnu du navigateur : la ligne reste masquée
+    }
+    function mettreAJour() {
+      cible.textContent = format.format(new Date());
+    }
+    mettreAJour();
+    zone.hidden = false;
+    setInterval(mettreAJour, 30000);
+  });
+
   /* Copie d'une adresse en un clic (section contact) */
   document.querySelectorAll("[data-copier]").forEach(function (bouton) {
     var libelle = bouton.getAttribute("aria-label");

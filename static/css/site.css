@@ -244,7 +244,7 @@ a:hover { color: var(--accent-survol); }
 .badges li {
   display: inline-flex; align-items: center; gap: .4rem; padding: .2rem .65rem;
   font-size: .8rem; font-weight: 500; color: var(--secondaire);
-  background: var(--attenue); border: 1px solid var(--bordure); border-radius: var(--rayon-petit);
+  background: var(--attenue); border: 1px solid var(--bordure); border-radius: 999px;
 }
 .badges--grands { gap: .6rem; }
 .badges--grands li { padding: .5rem 1rem; font-size: .95rem; color: var(--texte); background: var(--carte); }
@@ -408,14 +408,14 @@ a:hover { color: var(--accent-survol); }
 .groupe__compte {
   display: inline-grid; place-items: center; min-width: 1.9rem; height: 1.9rem; padding-inline: .5rem;
   font-family: var(--textes); font-size: .85rem; font-weight: 600; letter-spacing: 0;
-  color: var(--accent); background: var(--accent-pale); border: 1px solid var(--accent-bord); border-radius: var(--rayon-petit);
+  color: var(--accent); background: var(--accent-pale); border: 1px solid var(--accent-bord); border-radius: 999px;
 }
 .competences { display: grid; gap: 1rem; grid-template-columns: repeat(auto-fill, minmax(min(100%, 260px), 1fr)); }
 .competence {
   display: flex; align-items: center; gap: 1rem; padding: 1rem 1.1rem;
-  background: var(--carte); border: 1px solid var(--bordure); border-radius: var(--rayon);
+  background: var(--carte); border: 1px solid var(--bordure); border-radius: 16px;
 }
-.competence:hover { border-color: var(--accent-bord); }
+.competence:hover { border-color: var(--accent-bord); box-shadow: var(--ombre); }
 @media (prefers-reduced-motion: no-preference) {
   .competence { transition: border-color var(--duree) var(--courbe), box-shadow var(--duree) var(--courbe), transform var(--duree) var(--courbe); }
   .competence:hover { transform: translateY(-2px); }
@@ -424,14 +424,14 @@ a:hover { color: var(--accent-survol); }
 .competence__icone {
   /* Pastille plus large que haute : les logos horizontaux (Spark, Hadoop…) gardent une taille lisible. */
   display: flex; align-items: center; justify-content: center; flex: none; width: 88px; height: 60px; padding: 10px;
-  background: #fff; border: 1px solid var(--bordure); border-radius: var(--rayon);
+  background: #fff; border: 1px solid var(--bordure); border-radius: 14px;
 }
 .competence__icone--initiale { font-family: var(--titres); font-size: 1.4rem; font-weight: 650; color: var(--accent); background: var(--accent-pale); border-color: var(--accent-bord); }
 .competence__corps { display: grid; justify-items: start; gap: .35rem; min-width: 0; }
 .competence__nom { font-size: 1.05rem; font-weight: 600; line-height: 1.3; }
 .competence__projets { font-size: .88rem; color: var(--secondaire); }
 .competence__projets a { display: inline-block; padding-block: .2rem; }
-.niveau { padding: .1rem .55rem; font-size: .75rem; font-weight: 600; color: var(--secondaire); background: var(--attenue); border: 1px solid var(--bordure); border-radius: var(--rayon-petit); }
+.niveau { padding: .1rem .55rem; font-size: .75rem; font-weight: 600; color: var(--secondaire); background: var(--attenue); border: 1px solid var(--bordure); border-radius: 999px; }
 .niveau--maitrise { color: var(--accent); background: var(--accent-pale); border-color: var(--accent-bord); }
 
 /* ---------- Parcours (frise) ---------- */
@@ -447,7 +447,7 @@ a:hover { color: var(--accent-survol); }
 /* Même pastille que les compétences : les logos d'école, souvent larges, restent lisibles. */
 .frise__logo {
   display: flex; align-items: center; justify-content: center; flex: none; width: 112px; height: 64px; padding: 6px;
-  background: #fff; border: 1px solid var(--bordure); border-radius: var(--rayon);
+  background: #fff; border: 1px solid var(--bordure); border-radius: 14px;
 }
 .frise__logo img, .competence__icone img { width: 100%; height: 100%; min-height: 0; object-fit: contain; }
 .frise__tete h3 { font-size: 1.2rem; }
@@ -461,7 +461,7 @@ a:hover { color: var(--accent-survol); }
 .apercu-parcours { display: grid; gap: 1rem; grid-template-columns: repeat(auto-fit, minmax(min(100%, 300px), 1fr)); }
 .apercu-parcours__famille {
   display: grid; align-content: start; gap: 1rem; padding: 1.25rem;
-  background: var(--carte); border: 1px solid var(--bordure); border-radius: var(--rayon);
+  background: var(--carte); border: 1px solid var(--bordure); border-radius: 16px;
 }
 .apercu-parcours__titre {
   font-size: .82rem; font-weight: 600; letter-spacing: .06em; text-transform: uppercase; color: var(--accent);
@@ -583,16 +583,26 @@ a:hover { color: var(--accent-survol); }
 .pied { margin-top: clamp(2rem, 6vw, 4rem); padding-top: clamp(2.5rem, 6vw, 3.5rem); background: var(--pied); color: #D3D9D4; font-size: .95rem; }
 .pied a { color: #E7ECE8; text-decoration: none; }
 .pied a:hover { color: #fff; text-decoration: underline; }
-.pied__grille { display: grid; gap: 2rem; }
-@media (min-width: 700px) { .pied__grille { grid-template-columns: minmax(0, 2fr) minmax(0, 1fr) minmax(0, 1fr); } }
-.pied__nom { font-family: var(--titres); font-size: 1.15rem; font-weight: 600; color: #fff; margin-bottom: .35rem; }
-.pied__liens { display: grid; }
-.pied__liens a { display: inline-flex; align-items: center; min-height: 44px; }
+/* Signature : le nom en grand, une phrase, l'heure qu'il est à Abidjan */
+.pied__signature { display: flex; flex-wrap: wrap; align-items: flex-end; justify-content: space-between; gap: 1.5rem 2.5rem; }
+.pied__nom { font-family: var(--titres); font-size: clamp(2.1rem, 6vw, 3.4rem); font-weight: 600; line-height: 1; letter-spacing: -.03em; color: #fff; }
+.pied__texte { margin-top: .8rem; }
+.pied__heure { margin-top: .35rem; font-family: var(--chiffres); font-size: .85rem; color: #8FC3A2; font-variant-numeric: tabular-nums; }
+.pied__actions { display: flex; flex-wrap: wrap; align-items: center; gap: .5rem 1.25rem; }
+.pied__actions .reseaux { margin-top: 0; }
 .reseaux--pied a { color: #fff; }
-.pied__bas {
-  display: flex; flex-wrap: wrap; justify-content: space-between; gap: .25rem 1.5rem;
-  margin-top: 2rem; padding-block: 1.25rem; border-top: 1px solid #34413A; font-size: .88rem; color: #A7B0A9;
+.pied a.pied__remonter {
+  display: inline-flex; align-items: center; gap: .4rem; min-height: 44px; padding: 0 .95rem;
+  border: 1px solid #34413A; border-radius: var(--rayon-petit);
+  transition: border-color var(--duree) var(--courbe);
 }
+.pied a.pied__remonter:hover { border-color: #5B6E62; text-decoration: none; }
+.pied__bas {
+  display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: .25rem 1.5rem;
+  margin-top: clamp(1.75rem, 5vw, 2.75rem); padding-block: .75rem; border-top: 1px solid #34413A; font-size: .88rem; color: #A7B0A9;
+}
+.pied__legal { display: flex; flex-wrap: wrap; gap: 0 1.25rem; }
+.pied__legal a { display: inline-flex; align-items: center; min-height: 44px; color: #A7B0A9; }
 
 /* ---------- Motion design ----------
    Uniquement l'opacité et les transformations. Tout ce bloc est ignoré si le visiteur
