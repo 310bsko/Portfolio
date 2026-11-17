@@ -210,6 +210,12 @@ a:hover { color: var(--accent-survol); }
 .bloc { padding-block: clamp(2.5rem, 7vw, 5rem); }
 .bloc--serre { padding-top: clamp(1.5rem, 4vw, 2.5rem); }
 .bloc--attenue { background: var(--attenue); border-block: 1px solid var(--bordure); }
+/* Bande vert forêt : texte clair sur l'accent (contrastes de 6:1 et plus). */
+.bloc--vert { background: var(--accent); color: #fff; }
+.bloc--vert h2 { color: #fff; }
+.bloc--vert .prose { color: #E6EFE8; }
+.bloc--vert a, .bloc--vert a:hover { color: #fff; }
+.bloc--vert :focus-visible, .appel :focus-visible { outline-color: #fff; }
 .bloc__tete { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: .25rem 1.5rem; margin-bottom: 1.75rem; }
 .page-entete { padding-top: clamp(2.5rem, 7vw, 4.5rem); padding-bottom: .5rem; }
 .page-entete__sous-titre { margin-top: .9rem; max-width: 42rem; font-size: clamp(1.02rem, 2.2vw, 1.15rem); color: var(--secondaire); }
@@ -508,58 +514,60 @@ a:hover { color: var(--accent-survol); }
   position: relative; isolation: isolate; overflow: hidden;
   display: grid; gap: 2rem; align-items: center;
   padding: clamp(1.5rem, 5vw, 3rem);
-  background: var(--carte); border: 1px solid var(--bordure); border-radius: var(--rayon);
+  background: var(--accent); color: #fff; border-radius: var(--rayon);
 }
+/* Carte vert forêt : textes clairs, canaux en verre dépoli, formulaire en blanc. */
 .appel__surtitre {
   display: inline-flex; align-items: center; gap: .6rem; margin: 0;
-  font-size: .8rem; font-weight: 600; letter-spacing: .08em; text-transform: uppercase; color: var(--accent);
+  font-size: .8rem; font-weight: 600; letter-spacing: .08em; text-transform: uppercase; color: var(--accent-bord);
 }
 .appel__surtitre::before { content: ""; width: 1.5rem; height: 2px; border-radius: 2px; background: currentColor; }
-.appel h2 { margin-top: .75rem; max-width: 18ch; font-size: clamp(1.6rem, 4.2vw, 2.4rem); }
+.appel h2 { margin-top: .75rem; max-width: 18ch; font-size: clamp(1.6rem, 4.2vw, 2.4rem); color: #fff; }
 .appel__qui { display: flex; align-items: center; gap: .8rem; margin-top: 1.75rem; }
 .appel__qui img {
   flex: none; width: 48px; height: 48px; border-radius: 50%; object-fit: cover; object-position: 50% 10%;
-  border: 2px solid var(--carte); box-shadow: 0 0 0 1px var(--bordure); background: var(--attenue);
+  border: 2px solid var(--accent); box-shadow: 0 0 0 1px rgba(255, 255, 255, .35); background: var(--accent-survol);
 }
 .appel__qui p { display: grid; margin: 0; font-size: .95rem; line-height: 1.35; }
-.appel__qui p span { font-size: .85rem; color: var(--secondaire); }
+.appel__qui p span { font-size: .85rem; color: var(--accent-bord); }
 
 .canaux { display: grid; gap: .6rem; margin: 0; padding: 0; list-style: none; }
 .canaux li {
-  display: flex; align-items: center; background: var(--fond); border: 1px solid var(--bordure); border-radius: var(--rayon);
+  display: flex; align-items: center;
+  background: rgba(255, 255, 255, .06); border: 1px solid rgba(255, 255, 255, .2); border-radius: var(--rayon);
   transition: border-color var(--duree), background-color var(--duree), box-shadow .3s var(--courbe);
 }
-.canaux li:hover { background: var(--carte); border-color: var(--bordure-forte); }
+.canaux li:hover { background: rgba(255, 255, 255, .12); border-color: rgba(255, 255, 255, .4); }
 .canal {
   flex: 1; min-width: 0; display: flex; align-items: center; gap: .9rem; padding: .8rem 1rem;
-  color: var(--texte); text-decoration: none; border-radius: var(--rayon);
+  color: #fff; text-decoration: none; border-radius: var(--rayon);
 }
-.canal::after { content: "→"; margin-left: auto; padding-left: .5rem; color: var(--secondaire); transition: transform var(--duree) var(--courbe), color var(--duree); }
-.canaux li:hover .canal::after { transform: translateX(4px); color: var(--texte); }
+.canal::after { content: "→"; margin-left: auto; padding-left: .5rem; color: var(--accent-bord); transition: transform var(--duree) var(--courbe), color var(--duree); }
+.canaux li:hover .canal::after { transform: translateX(4px); color: #fff; }
 .canal__icone {
   flex: none; display: grid; place-items: center; width: 2.6rem; height: 2.6rem;
-  border-radius: var(--rayon-petit); background: var(--attenue); color: var(--texte);
+  border-radius: var(--rayon-petit); background: rgba(255, 255, 255, .1); color: #fff;
 }
 .canal__corps { display: grid; min-width: 0; line-height: 1.3; }
-.canal__nom { font-size: .75rem; font-weight: 600; letter-spacing: .05em; text-transform: uppercase; color: var(--secondaire); }
+.canal__nom { font-size: .75rem; font-weight: 600; letter-spacing: .05em; text-transform: uppercase; color: var(--accent-bord); }
 .canal__valeur { overflow: hidden; font-weight: 500; text-overflow: ellipsis; white-space: nowrap; }
 .canaux__copiable .canal__valeur { white-space: normal; overflow-wrap: anywhere; }
 /* L'email se copie en un clic (le bouton n'apparaît qu'avec le script) */
 .canal__copier {
   display: none; flex: none; place-items: center; width: 44px; height: 44px; margin-right: .45rem;
-  color: var(--secondaire); background: transparent; border: 0; border-radius: var(--rayon-petit); cursor: pointer;
+  color: var(--accent-bord); background: transparent; border: 0; border-radius: var(--rayon-petit); cursor: pointer;
 }
 .js .canal__copier { display: grid; }
 .js .canaux__copiable .canal::after { content: none; }
-.canal__copier:hover { color: var(--texte); background: var(--attenue); }
+.canal__copier:hover { color: #fff; background: rgba(255, 255, 255, .12); }
 .canal__copier .copier__ok, .canal__copier.copie .copier__icone { display: none; }
 .canal__copier.copie .copier__ok { display: block; }
-.canal__copier.copie { color: var(--dispo); }
-.canaux .canaux__principal { background: var(--accent); border-color: var(--accent); }
-.canaux .canaux__principal:hover { background: var(--accent-survol); border-color: var(--accent-survol); }
-.canaux__principal .canal, .canaux__principal .canal::after, .canaux li.canaux__principal:hover .canal::after { color: #fff; }
-.canaux__principal .canal__icone { background: none; color: #fff; }
-.canaux__principal .canal__nom { color: rgba(255, 255, 255, .75); }
+.canal__copier.copie { color: #fff; }
+.canaux .canaux__principal { background: var(--carte); border-color: var(--carte); }
+.canaux .canaux__principal:hover { background: var(--accent-pale); border-color: var(--accent-pale); }
+.canaux__principal .canal, .canaux__principal .canal::after, .canaux li.canaux__principal:hover .canal::after { color: var(--accent); }
+.canaux__principal .canal__icone { background: var(--accent-pale); color: var(--accent); }
+.canaux__principal .canal__nom { color: var(--secondaire); }
 @media (min-width: 860px) {
   .appel { grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr); gap: 3.5rem; }
 }
