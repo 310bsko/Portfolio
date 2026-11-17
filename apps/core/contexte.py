@@ -3,24 +3,24 @@
 from django.conf import settings
 from django.utils import timezone
 
-from .models import PageStatique, ParametresSite, Profil, SectionPublique
+from .donnees import donnees_site
 
 
 def site(request):
     if request.path.startswith("/" + settings.ADMIN_URL):
         return {}
-    profil = Profil.charger()
-    parametres = ParametresSite.charger()
-    menu = list(SectionPublique.objects.filter(visible=True))
+    donnees = donnees_site()
+    profil = donnees["profil"]
+    parametres = donnees["parametres"]
     annee = timezone.localdate().year
     debut = parametres.copyright_debut
     return {
         "profil": profil,
         "parametres": parametres,
         "nom_site": parametres.nom_site or profil.nom_complet,
-        "menu": menu,
-        "sections": {section.cle: section for section in menu},
-        "pages_pied": PageStatique.objects.filter(visible=True),
+        "menu": donnees["menu"],
+        "sections": donnees["sections"],
+        "pages_pied": donnees["pages_pied"],
         "copyright_annees": f"{debut}–{annee}" if debut and debut < annee else str(annee),
         "statistiques_vercel": settings.STATISTIQUES_VERCEL,
     }

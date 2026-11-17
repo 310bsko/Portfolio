@@ -1,11 +1,12 @@
 from django.contrib.sitemaps import Sitemap
 from django.db.models import Prefetch
-from django.http import HttpResponse
+from django.http import Http404, HttpResponse
 from django.shortcuts import get_object_or_404, render
 from django.urls import reverse
 
 from apps.portfolio.models import Competence, Parcours, Projet
 
+from .donnees import donnees_site
 from .models import PageStatique, SectionPublique
 
 COMPETENCES_ACCUEIL = 10
@@ -14,15 +15,18 @@ PARCOURS_ACCUEIL = 2  # lignes par famille (formations, expériences, certificat
 
 def section_ou_404(cle):
     """Une section masquée répond par une page 404."""
-    return get_object_or_404(SectionPublique, cle=cle, visible=True)
+    section = donnees_site()["sections"].get(cle)
+    if section is None:
+        raise Http404("Section masquée ou inexistante")
+    return section
 
 
 def section_visible(cle):
-    return SectionPublique.objects.filter(cle=cle, visible=True).exists()
+    return cle in donnees_site()["sections"]
 
 
 def accueil(request):
-    section = SectionPublique.objects.filter(cle="accueil").first()
+    section = donnees_site()["toutes_sections"].get("accueil")
     contexte = {
         "section": section, "projets_vedette": [], "competences_cles": [], "parcours_groupes": [],
     }

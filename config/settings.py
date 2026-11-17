@@ -83,6 +83,10 @@ DATABASES = {"default": env.db("DATABASE_URL", default=f"sqlite:///{BASE_DIR / '
 if DATABASES["default"]["ENGINE"].endswith("postgresql"):
     # Indispensable avec le pooler de Neon (PgBouncer en mode transaction).
     DATABASES["default"]["DISABLE_SERVER_SIDE_CURSORS"] = True
+    # Garder la connexion ouverte entre deux visites : la rouvrir (TLS + authentification)
+    # coûte plusieurs allers-retours vers Neon. Vérifiée avant réutilisation.
+    DATABASES["default"]["CONN_MAX_AGE"] = 60
+    DATABASES["default"]["CONN_HEALTH_CHECKS"] = True
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 # --- Cache partagé en base : le cache mémoire n'est pas partagé entre instances serverless.
@@ -93,6 +97,9 @@ CACHES = {
     }
 }
 DUREE_CACHE_PAGES = 60  # secondes, maximum fixé par le cahier des charges
+# Profil, paramètres, sections et pages légales gardés en mémoire (voir apps/core/donnees.py).
+# Désactivé pendant les tests, où chaque test repart d'une base différente.
+DUREE_CACHE_DONNEES = 0 if EN_TEST else 60
 
 # --- Authentification
 AUTHENTICATION_BACKENDS = [
