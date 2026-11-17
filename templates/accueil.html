@@ -5,68 +5,46 @@
 {% block og_titre %}{% firstof section.seo_titre nom_site %}{% endblock %}
 
 {% block contenu %}
-{# Accueil en « carnet technique » : un en-tête, puis des rubriques numérotées (01, 02…) #}
-{# avec l'intitulé à gauche et le contenu à droite. La numérotation est faite en CSS : #}
-{# une section masquée ne laisse pas de trou. #}
 <section class="hero">
+  <span class="hero__halo hero__halo--a" aria-hidden="true"></span>
+  <span class="hero__halo hero__halo--b" aria-hidden="true"></span>
   <div class="conteneur hero__grille">
     <div class="hero__texte entree">
-      {% if profil.disponible and profil.disponibilite_texte or profil.localisation %}
-      <p class="hero__statut">
-        {% if profil.disponible and profil.disponibilite_texte %}<span class="hero__dispo"><span class="dispo__point" aria-hidden="true"></span>{{ profil.disponibilite_texte }}</span>{% endif %}
-        {% if profil.localisation %}<span>{{ profil.localisation }}</span>{% endif %}
-      </p>
+      {% if profil.disponible and profil.disponibilite_texte %}
+      <p class="dispo"><span class="dispo__point" aria-hidden="true"></span>{{ profil.disponibilite_texte }}</p>
       {% endif %}
       <h1 translate="no" aria-label="{{ profil.nom_complet }}">{% for mot in profil.nom_complet.split %}<span class="mot" aria-hidden="true"><span style="--i:{{ forloop.counter0 }}">{{ mot }}</span></span>{% if not forloop.last %} {% endif %}{% endfor %}</h1>
       {% if profil.titre %}<p class="hero__titre">{{ profil.titre }}</p>{% endif %}
       {% if profil.accroche %}<p class="hero__accroche">{{ profil.accroche|linebreaksbr }}</p>{% endif %}
       <div class="actions">
-        {% if sections.projets and parametres.bouton_projets %}<a class="bouton bouton--plein" href="{% url 'projets' %}">{{ parametres.bouton_projets }}</a>{% endif %}
+        {% if sections.projets and parametres.bouton_projets %}<a class="bouton bouton--plein" data-aimant href="{% url 'projets' %}">{{ parametres.bouton_projets }}</a>{% endif %}
         {% if sections.contact and parametres.bouton_contact %}<a class="bouton" href="{% url 'contact' %}">{{ parametres.bouton_contact }}</a>{% endif %}
         {% if profil.cv and parametres.bouton_cv %}<a class="bouton bouton--discret" href="{{ profil.cv.url }}" download>
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 4v11m0 0-4-4m4 4 4-4M5 20h14"/></svg>{{ parametres.bouton_cv }}</a>{% endif %}
       </div>
+      {% if profil.localisation %}<p class="hero__lieu">{{ profil.localisation }}</p>{% endif %}
+      {% include "_reseaux.html" %}
     </div>
     {% if profil.photo %}
-    <figure class="hero__photo">
-      <img src="{{ profil.photo|image:720 }}" alt="{% firstof profil.photo_alt profil.nom_complet %}" width="360" height="450" fetchpriority="high">
-    </figure>
+    <div class="hero__photo">
+      <div class="hero__cadre" data-incliner="7">
+        <span class="hero__anneau" aria-hidden="true"></span>
+        <span class="hero__pastille" aria-hidden="true"></span>
+        <img src="{{ profil.photo|image:720 }}" alt="{% firstof profil.photo_alt profil.nom_complet %}" width="360" height="360" fetchpriority="high">
+      </div>
+    </div>
     {% endif %}
-    {% with vedette=projets_vedette|first %}
-    {% if en_cours or vedette or profil.lien_github or profil.lien_linkedin or profil.lien_whatsapp or profil.lien_autre %}
-    <dl class="fiche">
-      {% if en_cours %}
-      <div class="fiche__case">
-        <dt>{% if en_cours.type == "formation" %}En formation{% elif en_cours.type == "stage" %}En stage{% else %}En ce moment{% endif %}</dt>
-        <dd>{{ en_cours.titre }}{% if en_cours.organisme %}<span class="fiche__detail">{{ en_cours.organisme }} · depuis {{ en_cours.date_debut|date:"F Y"|lower }}</span>{% endif %}</dd>
-      </div>
-      {% endif %}
-      {% if vedette %}
-      <div class="fiche__case">
-        <dt>Dernier projet</dt>
-        <dd><a href="{{ vedette.get_absolute_url }}">{{ vedette.titre }}</a>{% if vedette.categorie %}<span class="fiche__detail">{{ vedette.categorie.nom }}{% if vedette.annee %} · {{ vedette.annee }}{% endif %}</span>{% endif %}</dd>
-      </div>
-      {% endif %}
-      {% if profil.lien_github or profil.lien_linkedin or profil.lien_whatsapp or profil.lien_autre %}
-      <div class="fiche__case">
-        <dt>Me retrouver</dt>
-        <dd>{% include "_reseaux.html" %}</dd>
-      </div>
-      {% endif %}
-    </dl>
-    {% endif %}
-    {% endwith %}
   </div>
 </section>
 
 {% if sections.apropos and profil.apropos_texte %}
-<section class="rubrique">
-  <div class="conteneur rubrique__grille">
-    <header class="rubrique__tete">
+<section class="bloc bloc--attenue">
+  <div class="conteneur">
+    <div class="bloc__tete reveler">
       <h2>{% firstof profil.apropos_titre sections.apropos.titre %}</h2>
-    </header>
-    <div class="rubrique__corps reveler">
-      <div class="prose apercu-apropos">{{ profil.apropos_texte|premier_paragraphe }}</div>
+    </div>
+    <div class="apercu-apropos reveler">
+      <div class="prose apercu-apropos__texte">{{ profil.apropos_texte|premier_paragraphe }}</div>
       <a class="lien-fleche" href="{% url 'apropos' %}">En savoir plus sur moi</a>
     </div>
   </div>
@@ -74,71 +52,54 @@
 {% endif %}
 
 {% if projets_vedette %}
-<section class="rubrique">
-  <div class="conteneur rubrique__grille">
-    <header class="rubrique__tete">
+<section class="bloc">
+  <div class="conteneur">
+    <div class="bloc__tete reveler">
       <h2>{% firstof sections.projets.titre "Projets" %}</h2>
       <a class="lien-fleche" href="{% url 'projets' %}">Tous les projets</a>
-    </header>
-    <ol class="index-projets rubrique__corps">
-      {% for projet in projets_vedette %}
-      <li class="index-projets__ligne reveler" style="--i:{{ forloop.counter0 }}">
-        <span class="index-projets__num" aria-hidden="true">{{ forloop.counter|stringformat:"02d" }}</span>
-        <div class="index-projets__texte">
-          <h3><a class="index-projets__lien" href="{{ projet.get_absolute_url }}">{{ projet.titre }}</a></h3>
-          {% if projet.resume %}<p class="index-projets__resume">{{ projet.resume }}</p>{% endif %}
-          {% with technologies=projet.technologies.all %}{% if technologies %}
-          <p class="index-projets__technos" translate="no">{% for technologie in technologies|slice:":5" %}{{ technologie.nom }}{% if not forloop.last %} · {% endif %}{% endfor %}</p>
-          {% endif %}{% endwith %}
-        </div>
-        <span class="index-projets__meta">{% if projet.categorie.visible %}{{ projet.categorie.nom }}{% endif %}{% if projet.categorie.visible and projet.annee %}<br>{% endif %}{{ projet.annee|default_if_none:"" }}</span>
-        <span class="index-projets__image" aria-hidden="true">
-          {% if projet.image %}<img src="{{ projet.image|image:480 }}" alt="" loading="lazy">{% else %}<img src="{% static 'img/projet-defaut.svg' %}" alt="" loading="lazy">{% endif %}
-        </span>
-      </li>
-      {% endfor %}
-    </ol>
+    </div>
+    <div class="grille-projets grille-projets--vedette">
+      {% for projet in projets_vedette %}{% include "portfolio/_carte.html" with h="h3" %}{% endfor %}
+    </div>
   </div>
 </section>
 {% endif %}
 
-{% if competences_groupes %}
-<section class="rubrique">
-  <div class="conteneur rubrique__grille">
-    <header class="rubrique__tete">
+{% if competences_cles %}
+<section class="bloc bloc--attenue">
+  <div class="conteneur">
+    <div class="bloc__tete reveler">
       <h2>{% firstof sections.competences.titre "Compétences" %}</h2>
       <a class="lien-fleche" href="{% url 'competences' %}">Toutes les compétences</a>
-    </header>
-    <dl class="pile rubrique__corps reveler">
-      {% for nom, liste in competences_groupes %}
-      <div class="pile__ligne">
-        <dt>{{ nom }}</dt>
-        <dd translate="no">{% for competence in liste %}<span class="pile__item">{% if competence.icone %}<img src="{{ competence.icone|image:48 }}" alt="" width="18" height="18" loading="lazy">{% endif %}{{ competence.nom }}</span>{% endfor %}</dd>
-      </div>
+    </div>
+    <ul class="badges badges--grands reveler" translate="no">
+      {% for competence in competences_cles %}<li style="--j:{{ forloop.counter0 }}">{% if competence.icone %}<img src="{{ competence.icone|image:48 }}" alt="" width="20" height="20" loading="lazy">{% endif %}{{ competence.nom }}</li>
       {% endfor %}
-    </dl>
+    </ul>
   </div>
 </section>
 {% endif %}
 
 {% if parcours_groupes %}
-<section class="rubrique">
-  <div class="conteneur rubrique__grille">
-    <header class="rubrique__tete">
+<section class="bloc">
+  <div class="conteneur">
+    <div class="bloc__tete reveler">
       <h2>{% firstof sections.parcours.titre "Parcours" %}</h2>
       <a class="lien-fleche" href="{% url 'parcours' %}">Tout mon parcours</a>
-    </header>
-    <div class="rubrique__corps journal">
+    </div>
+    <div class="apercu-parcours">
       {% for nom, lignes in parcours_groupes %}
-      <div class="journal__famille reveler" style="--i:{{ forloop.counter0 }}">
-        <h3 class="journal__titre">{{ nom }}</h3>
+      <div class="apercu-parcours__famille reveler" style="--j:{{ forloop.counter0 }}">
+        <h3 class="apercu-parcours__titre">{{ nom }}</h3>
         <ol>
           {% for ligne in lignes %}
-          <li class="journal__ligne">
-            <span class="journal__date">{% if ligne.date_debut %}{{ ligne.date_debut|date:"Y" }}{% if ligne.date_fin and ligne.date_fin.year != ligne.date_debut.year %}–{{ ligne.date_fin|date:"Y" }}{% elif not ligne.date_fin %}–auj.{% endif %}{% elif ligne.date_fin %}{{ ligne.date_fin|date:"Y" }}{% endif %}</span>
+          <li class="frise__tete">
+            {% if ligne.logo %}<span class="frise__logo" aria-hidden="true"><img src="{{ ligne.logo|image:240 }}" alt="" width="68" height="44" loading="lazy"></span>{% endif %}
             <div>
               <h4>{{ ligne.titre }}</h4>
-              {% if ligne.organisme or ligne.lieu %}<p class="journal__lieu">{{ ligne.organisme }}{% if ligne.organisme and ligne.lieu %} · {% endif %}{{ ligne.lieu }}</p>{% endif %}
+              {% if ligne.organisme or ligne.lieu %}<p class="frise__lieu">{{ ligne.organisme }}{% if ligne.organisme and ligne.lieu %} · {% endif %}{{ ligne.lieu }}</p>{% endif %}
+              {% if ligne.date_debut %}<p class="apercu-parcours__date">{{ ligne.date_debut|date:"M Y" }} – {% if ligne.date_fin %}{{ ligne.date_fin|date:"M Y" }}{% else %}aujourd'hui{% endif %}</p>
+              {% elif ligne.date_fin %}<p class="apercu-parcours__date">{{ ligne.date_fin|date:"M Y" }}</p>{% endif %}
             </div>
           </li>
           {% endfor %}
@@ -151,18 +112,15 @@
 {% endif %}
 
 {% if sections.contact %}
-<section class="rubrique rubrique--fin">
-  <div class="conteneur rubrique__grille">
-    <header class="rubrique__tete">
-      <h2>{{ sections.contact.titre }}</h2>
-    </header>
-    <div class="rubrique__corps fin reveler">
-      {% if sections.contact.sous_titre %}<p class="fin__texte">{{ sections.contact.sous_titre }}</p>{% endif %}
-      {% if profil.email_public %}<a class="fin__email" href="mailto:{{ profil.email_public }}">{{ profil.email_public }}</a>{% endif %}
-      <div class="actions">
-        <a class="bouton bouton--plein" href="{% url 'contact' %}">{% firstof parametres.bouton_contact "Me contacter" %}</a>
-        {% if profil.cv and parametres.bouton_cv %}<a class="bouton" href="{{ profil.cv.url }}" download>{{ parametres.bouton_cv }}</a>{% endif %}
+<section class="bloc">
+  <div class="conteneur">
+    <div class="appel reveler">
+      <span class="appel__halo" aria-hidden="true"></span>
+      <div>
+        <h2>{{ sections.contact.titre }}</h2>
+        {% if sections.contact.sous_titre %}<p>{{ sections.contact.sous_titre }}</p>{% endif %}
       </div>
+      <a class="bouton bouton--plein" data-aimant href="{% url 'contact' %}">{% firstof parametres.bouton_contact "Me contacter" %}</a>
     </div>
   </div>
 </section>

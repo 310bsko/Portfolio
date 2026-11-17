@@ -70,22 +70,9 @@ def test_accueil_montre_le_parcours_par_famille(client):
     # Les deux plus récentes de chaque famille : Formations, Expériences, Certifications.
     assert "Diplôme 2025" in accueil and "Diplôme 2024" in accueil
     assert "Diplôme 2023" not in accueil and "Masquée" not in accueil
-    section = accueil[accueil.index("Formations"):]  # le hero cite déjà la ligne en cours
-    positions = [section.index(t) for t in ("Formations", "Diplôme 2025", "Diplôme 2024",
+    positions = [accueil.index(t) for t in ("Formations", "Diplôme 2025", "Diplôme 2024",
                                              "Expériences", "Stage data", "Certifications", "AWS")]
     assert positions == sorted(positions)
-
-
-def test_le_hero_cite_ce_qui_est_en_cours(client):
-    Parcours.objects.create(titre="Licence", type="formation", date_debut="2021-09-01",
-                            date_fin="2024-06-30")
-    Parcours.objects.create(titre="Master Data", type="formation", organisme="ESATIC",
-                            date_debut="2024-09-01")
-    Parcours.objects.create(titre="Cert sans date", type="certification")
-    accueil = client.get(reverse("accueil")).content.decode()
-    fiche = accueil[accueil.index('class="fiche"'):accueil.index("</dl>")]
-    assert "En formation" in fiche and "Master Data" in fiche and "ESATIC" in fiche
-    assert "Licence" not in fiche and "Cert sans date" not in fiche
 
 
 def test_accueil_montre_le_debut_de_l_apropos(client):

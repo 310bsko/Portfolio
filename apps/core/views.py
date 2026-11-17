@@ -21,23 +21,10 @@ def section_visible(cle):
     return SectionPublique.objects.filter(cle=cle, visible=True).exists()
 
 
-def grouper_par_categorie(competences):
-    """[(nom de catégorie, [compétences])] dans l'ordre des catégories ; « Autres » en dernier."""
-    groupes = {}
-    for competence in competences:
-        groupes.setdefault(competence.categorie, []).append(competence)
-    avec = sorted((c for c in groupes if c), key=lambda c: (c.ordre, c.nom))
-    resultat = [(c.nom, groupes[c]) for c in avec]
-    if None in groupes:
-        resultat.append(("Autres", groupes[None]))
-    return resultat
-
-
 def accueil(request):
     section = SectionPublique.objects.filter(cle="accueil").first()
     contexte = {
         "section": section, "projets_vedette": [], "competences_cles": [], "parcours_groupes": [],
-        "en_cours": None, "competences_groupes": [],
     }
     if section_visible("projets"):
         contexte["projets_vedette"] = (
@@ -50,20 +37,11 @@ def accueil(request):
         )
     if section_visible("competences"):
         competences = Competence.objects.publiques()
-        competences = competences.select_related("categorie")
         cles = list(competences.filter(mise_en_avant=True))
         # Sans compétence clé cochée, l'accueil montre quand même les premières.
         contexte["competences_cles"] = cles or list(competences[:COMPETENCES_ACCUEIL])
-        contexte["competences_groupes"] = grouper_par_categorie(contexte["competences_cles"])
     if section_visible("parcours"):
         contexte["parcours_groupes"] = Parcours.objects.par_famille(limite=PARCOURS_ACCUEIL)
-        # Ce que je fais en ce moment : la ligne commencée la plus récente, sans date de fin.
-        contexte["en_cours"] = (
-            Parcours.objects.filter(visible=True, date_debut__isnull=False, date_fin__isnull=True)
-            .exclude(type=Parcours.Type.CERTIFICATION)
-            .chronologie()
-            .first()
-        )
     return render(request, "accueil.html", contexte)
 
 
