@@ -23,7 +23,6 @@
       <p class="carte__meta">{% if projet.categorie.visible %}<span>{{ projet.categorie.nom }}</span>{% endif %}{% if projet.annee %}<span>{{ projet.annee }}</span>{% endif %}</p>
       {% endif %}
       {% if projet.resume %}<p class="page-entete__sous-titre">{{ projet.resume }}</p>{% endif %}
-      {% if projet.chiffre_cle %}<p class="chiffre-cle chiffre-cle--entete"><strong>{{ projet.chiffre_cle }}</strong>{% if projet.chiffre_cle_legende %}<span>{{ projet.chiffre_cle_legende }}</span>{% endif %}</p>{% endif %}
       {% if projet.lien_github or projet.lien_demo %}
       <div class="actions">
         {% if projet.lien_demo %}<a class="bouton bouton--plein" href="{{ projet.lien_demo }}" target="_blank" rel="noopener">Voir la démo</a>{% endif %}

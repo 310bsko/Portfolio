@@ -92,18 +92,6 @@ class Projet(Ordonne):
         help_text="Générée à partir du titre si laissée vide.",
     )
     resume = models.TextField("résumé", blank=True, max_length=300)
-    probleme = models.CharField(
-        "problème en une phrase", max_length=160, blank=True,
-        help_text="Affiché sur la carte du projet. Ex. : « Comparer l'économie de 15 pays "
-        "ouest-africains sur 35 ans. » Si vide, le résumé est utilisé.",
-    )
-    chiffre_cle = models.CharField(
-        "chiffre clé", max_length=20, blank=True, help_text="Ex. : « 8 100 »."
-    )
-    chiffre_cle_legende = models.CharField(
-        "légende du chiffre clé", max_length=60, blank=True,
-        help_text="Ex. : « observations sur 15 pays ».",
-    )
     contexte = models.TextField("contexte", blank=True, help_text="Markdown.")
     problematique = models.TextField("problématique", blank=True, help_text="Markdown.")
     solution = models.TextField("solution", blank=True, help_text="Markdown.")
