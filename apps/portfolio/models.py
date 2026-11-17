@@ -61,7 +61,8 @@ class Competence(Ordonne):
     niveau = models.CharField("niveau", max_length=10, choices=Niveau.choices, blank=True)
     icone = ChampImage("icône", upload_to=Chemin("competences"), blank=True, rogner=True)
     mise_en_avant = models.BooleanField(
-        "compétence clé", default=False, help_text="Affichée sur la page d'accueil."
+        "compétence clé", default=False,
+        help_text="Affichée sur la page d'accueil (9 au maximum, dans l'ordre choisi).",
     )
     visible = models.BooleanField("visible", default=True)
 

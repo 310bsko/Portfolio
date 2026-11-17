@@ -67,12 +67,19 @@ def test_accueil_montre_le_parcours_par_famille(client):
     Parcours.objects.create(titre="AWS", type="certification")
     Parcours.objects.create(titre="Masquée", type="stage", date_debut="2026-01-01", visible=False)
     accueil = client.get(reverse("accueil")).content.decode()
-    # Les deux plus récentes de chaque famille : Formations, Expériences, Certifications.
-    assert "Diplôme 2025" in accueil and "Diplôme 2024" in accueil
-    assert "Diplôme 2023" not in accueil and "Masquée" not in accueil
-    positions = [accueil.index(t) for t in ("Formations", "Diplôme 2025", "Diplôme 2024",
+    # Les trois plus récentes de chaque famille : Formations, Expériences, Certifications.
+    assert all(f"Diplôme {annee}" in accueil for annee in (2025, 2024, 2023))
+    assert "Diplôme 2022" not in accueil and "Masquée" not in accueil
+    positions = [accueil.index(t) for t in ("Formations", "Diplôme 2025", "Diplôme 2024", "Diplôme 2023",
                                              "Expériences", "Stage data", "Certifications", "AWS")]
     assert positions == sorted(positions)
+
+
+def test_accueil_limite_les_competences_cles_a_neuf(client):
+    for numero in range(1, 11):
+        Competence.objects.create(nom=f"Outil {numero:02d}", mise_en_avant=True, ordre=numero)
+    accueil = client.get(reverse("accueil")).content.decode()
+    assert "Outil 09" in accueil and "Outil 10" not in accueil
 
 
 def test_accueil_montre_le_debut_de_l_apropos(client):

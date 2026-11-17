@@ -33,7 +33,7 @@
   <header class="entete">
     <div class="conteneur entete__barre">
       <a class="logo" href="{% url 'accueil' %}" translate="no">
-        {% if profil.logo_image %}<img src="{{ profil.logo_image|image:320 }}" alt="{% firstof profil.logo_alt profil.nom_complet %}" height="36">{% else %}<img class="logo__marque" src="{% static 'img/favicon.svg' %}" alt="" width="30" height="30">{% firstof profil.logo_texte profil.nom_complet|title %}{% endif %}
+        {% if profil.logo_image %}<img class="logo__image" src="{{ profil.logo_image|image:320 }}" alt="" height="46">{% else %}<img class="logo__marque" src="{% static 'img/favicon.svg' %}" alt="" width="36" height="36">{% endif %}<span class="logo__nom">{{ profil.logo }}</span>
       </a>
       <button class="menu-bouton" type="button" popovertarget="menu" aria-label="Ouvrir le menu">
         <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path class="b1" d="M4 7h16"/><path class="b2" d="M4 12h16"/><path class="b3" d="M4 17h16"/></svg>

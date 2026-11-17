@@ -101,10 +101,16 @@ a:hover { color: var(--accent-survol); }
   color: var(--texte); text-decoration: none;
 }
 .logo:hover { color: var(--accent); }
-.logo img { height: 36px; width: auto; }
-/* Marque « SB » (même dessin que le favicon) devant le nom */
-.logo { gap: .6rem; }
-.logo .logo__marque { width: 30px; height: 30px; flex: none; }
+/* Logo (image de l'admin, sinon marque « SB » du favicon) suivi du nom */
+.logo { gap: .7rem; }
+.logo .logo__image { height: 46px; width: auto; flex: none; }
+.logo .logo__marque { width: 36px; height: 36px; flex: none; }
+.logo__nom { white-space: nowrap; }
+@media (max-width: 400px) {
+  .logo { gap: .5rem; font-size: 1rem; }
+  .logo .logo__image { height: 38px; }
+  .logo .logo__marque { width: 32px; height: 32px; }
+}
 
 .menu-bouton {
   display: none; align-items: center; justify-content: center;

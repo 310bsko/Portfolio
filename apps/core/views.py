@@ -9,8 +9,8 @@ from apps.portfolio.models import Competence, Parcours, Projet
 from .donnees import donnees_site
 from .models import PageStatique, SectionPublique
 
-COMPETENCES_ACCUEIL = 10
-PARCOURS_ACCUEIL = 2  # lignes par famille (formations, expériences, certifications)
+COMPETENCES_ACCUEIL = 9  # trois lignes de trois
+PARCOURS_ACCUEIL = 3  # lignes par famille (formations, expériences, certifications)
 
 
 def section_ou_404(cle):
@@ -43,7 +43,7 @@ def accueil(request):
         competences = Competence.objects.publiques().prefetch_related(
             Prefetch("projets", queryset=Projet.objects.publies())
         )
-        cles = list(competences.filter(mise_en_avant=True))
+        cles = list(competences.filter(mise_en_avant=True)[:COMPETENCES_ACCUEIL])
         # Sans compétence clé cochée, l'accueil montre quand même les premières.
         contexte["competences_cles"] = cles or list(competences[:COMPETENCES_ACCUEIL])
     if section_visible("parcours"):
