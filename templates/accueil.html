@@ -68,8 +68,8 @@
       <h2>{% firstof sections.competences.titre "Compétences" %}</h2>
       <a class="lien-fleche" href="{% url 'competences' %}">Toutes les compétences</a>
     </div>
-    <ul class="badges badges--grands reveler" translate="no">
-      {% for competence in competences_cles %}<li style="--j:{{ forloop.counter0 }}">{% if competence.icone %}<img src="{{ competence.icone|image:48 }}" alt="" width="20" height="20" loading="lazy">{% endif %}{{ competence.nom }}</li>
+    <ul class="competences reveler">
+      {% for competence in competences_cles %}{% include "portfolio/_competence.html" %}
       {% endfor %}
     </ul>
   </div>
@@ -85,19 +85,10 @@
     </div>
     <div class="apercu-parcours">
       {% for nom, lignes in parcours_groupes %}
-      <div class="apercu-parcours__famille reveler" style="--j:{{ forloop.counter0 }}">
-        <h3 class="apercu-parcours__titre">{{ nom }}</h3>
-        <ol>
-          {% for ligne in lignes %}
-          <li class="frise__tete">
-            {% if ligne.logo %}<span class="frise__logo" aria-hidden="true"><img src="{{ ligne.logo|image:240 }}" alt="" width="68" height="44" loading="lazy"></span>{% endif %}
-            <div>
-              <h4>{{ ligne.titre }}</h4>
-              {% if ligne.organisme or ligne.lieu %}<p class="frise__lieu">{{ ligne.organisme }}{% if ligne.organisme and ligne.lieu %} · {% endif %}{{ ligne.lieu }}</p>{% endif %}
-              {% if ligne.date_debut %}<p class="apercu-parcours__date">{{ ligne.date_debut|date:"M Y" }} – {% if ligne.date_fin %}{{ ligne.date_fin|date:"M Y" }}{% else %}aujourd'hui{% endif %}</p>
-              {% elif ligne.date_fin %}<p class="apercu-parcours__date">{{ ligne.date_fin|date:"M Y" }}</p>{% endif %}
-            </div>
-          </li>
+      <div>
+        <h3 class="groupe__titre reveler"><span>{{ nom }}</span></h3>
+        <ol class="frise">
+          {% for ligne in lignes %}{% include "portfolio/_ligne_parcours.html" with h="h4" %}
           {% endfor %}
         </ol>
       </div>

@@ -36,7 +36,9 @@ def accueil(request):
             )[:5]
         )
     if section_visible("competences"):
-        competences = Competence.objects.publiques()
+        competences = Competence.objects.publiques().prefetch_related(
+            Prefetch("projets", queryset=Projet.objects.publies())
+        )
         cles = list(competences.filter(mise_en_avant=True))
         # Sans compétence clé cochée, l'accueil montre quand même les premières.
         contexte["competences_cles"] = cles or list(competences[:COMPETENCES_ACCUEIL])

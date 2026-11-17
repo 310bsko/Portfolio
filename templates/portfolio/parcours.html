@@ -9,22 +9,7 @@
     <h2 class="groupe__titre reveler"><span>{{ nom }}</span><span class="groupe__compte">{{ lignes|length }}</span></h2>
     <ol class="frise">
       {% for ligne in lignes %}
-      <li class="frise__ligne reveler">
-        <p class="frise__meta">
-          <span class="niveau">{{ ligne.get_type_display }}</span>
-          {% if ligne.date_debut %}<span>{{ ligne.date_debut|date:"M Y" }} – {% if ligne.date_fin %}{{ ligne.date_fin|date:"M Y" }}{% else %}aujourd'hui{% endif %}</span>
-          {% elif ligne.date_fin %}<span>{{ ligne.date_fin|date:"M Y" }}</span>{% endif %}
-        </p>
-        <div class="frise__tete">
-          {% if ligne.logo %}<span class="frise__logo" aria-hidden="true"><img src="{{ ligne.logo|image:240 }}" alt="" width="68" height="44" loading="lazy"></span>{% endif %}
-          <div>
-            <h3>{{ ligne.titre }}</h3>
-            {% if ligne.organisme or ligne.lieu %}<p class="frise__lieu">{{ ligne.organisme }}{% if ligne.organisme and ligne.lieu %} · {% endif %}{{ ligne.lieu }}</p>{% endif %}
-          </div>
-        </div>
-        {% if ligne.description %}<div class="prose">{{ ligne.description|markdown }}</div>{% endif %}
-        {% if ligne.lien %}<a class="lien-fleche" href="{{ ligne.lien }}" target="_blank" rel="noopener">{% if ligne.type == "certification" %}Vérifier la certification{% else %}En savoir plus{% endif %}</a>{% endif %}
-      </li>
+      {% include "portfolio/_ligne_parcours.html" %}
       {% endfor %}
     </ol>
   </div>
